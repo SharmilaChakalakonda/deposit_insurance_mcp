@@ -5,15 +5,16 @@ calculations and regulatory guidance to replace manual calculator lookups.
 
 Conforms to:
 - 12 CFR Part 330 (Deposit Insurance Coverage Regulations)
-- Financial Institution Employee's Guide to Deposit Insurance
-- Electronic Deposit Insurance Estimator (Deposit Insurance Calculator) calculation standards
-- Trust Rule Simplification (Effective April 1, 2024; 12 CFR § 330.10)
+- FDIC Financial Institution Employee's Guide to Deposit Insurance
+- Electronic Deposit Insurance Estimator (EDIE) calculation standards
+- FDIC 2024 Trust Rule Simplification (Effective April 1, 2024; 12 CFR § 330.10)
 - Databricks Apps container deployment requirements
 - GSA Open Source & Super Intelligence (SI) CoP standards
 
 DISCLAIMER:
-This project was developed independently using publicly available information, data,
-and tools. This is NOT an official FDIC tool or official FDIC MCP server.
+This project was developed independently using publicly available information, regulations,
+and tools. This is NOT created by, affiliated with, endorsed by, or an official tool of the
+Federal Deposit Insurance Corporation (FDIC) or any government agency.
 """
 
 from __future__ import annotations
@@ -246,14 +247,14 @@ async def root_info() -> Dict[str, Any]:
     port = int(os.environ.get("DATABRICKS_APP_PORT", 8000))
     return {
         "service": "Deposit Insurance Calculator MCP Server",
-        "description": "Production-grade MCP server interfacing with deposit insurance regulations and Deposit Insurance Calculator calculations.",
-        "disclaimer": "This is an independent open-source project built with publicly available data and tools. It is NOT an official FDIC tool or official FDIC MCP server.",
+        "description": "Production-grade MCP server interfacing with deposit insurance regulations (12 CFR Part 330) and EDIE calculation standards.",
+        "disclaimer": "This independent open-source project is built with publicly available data and tools. It is NOT created by, affiliated with, or an official tool of the FDIC.",
         "status": "operational",
         "version": "1.0.0",
         "compliance": [
             "12 CFR Part 330",
-            "Financial Institution Employee's Guide to Deposit Insurance",
-            "2024 Trust Rule Simplification",
+            "FDIC Financial Institution Employee's Guide to Deposit Insurance",
+            "FDIC 2024 Trust Rule Simplification",
             "GSA Open Source Guidelines",
             "Databricks Apps Specification"
         ],
@@ -293,7 +294,7 @@ async def api_calculate(accounts: List[AccountInput]) -> Dict[str, Any]:
 
 @app.get("/api/guidance", tags=["REST API"])
 async def api_guidance(category: Optional[str] = None, topic: Optional[str] = None) -> Dict[str, Any]:
-    """Direct REST endpoint for querying insurance rules and statutory guidance."""
+    """Direct REST endpoint for querying FDIC insurance rules and statutory guidance."""
     return get_rule_guidance(category=category, topic=topic)
 
 

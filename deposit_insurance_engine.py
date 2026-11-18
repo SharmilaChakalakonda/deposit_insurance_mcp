@@ -1,10 +1,14 @@
 """Deposit Insurance Calculation Engine and Rules Guidance.
 
-Sourced from:
+DISCLAIMER:
+This calculation engine is an independent open-source project built using publicly available regulations,
+data, and calculation methods. It is NOT created, endorsed, certified, or sponsored by the FDIC.
+
+Sourced from public regulations and standards:
 - 12 CFR Part 330 (Deposit Insurance Coverage Regulations)
-- Financial Institution Employee's Guide to Deposit Insurance
-- Electronic Deposit Insurance Estimator (Deposit Insurance Calculator) calculation standards
-- Trust Rule Simplification (Effective April 1, 2024; 12 CFR § 330.10)
+- FDIC Financial Institution Employee's Guide to Deposit Insurance
+- Electronic Deposit Insurance Estimator (EDIE) calculation reference standards
+- FDIC 2024 Trust Rule Simplification (Effective April 1, 2024; 12 CFR § 330.10)
 """
 
 from __future__ import annotations
@@ -798,12 +802,13 @@ def calculate_portfolio_insurance(
 
 def _get_fdic_disclaimer() -> str:
     return (
-        "FDIC DISCLAIMER: This calculation estimate conforms to standard FDIC deposit insurance rules "
+        "STATUTORY & REGULATORY DISCLAIMER: This calculation estimate conforms to standard deposit insurance rules "
         "under 12 CFR Part 330, the FDIC Financial Institution Employee's Guide to Deposit Insurance, "
-        "and the Electronic Deposit Insurance Estimator (Deposit Insurance Calculator) algorithm. Actual deposit insurance coverage "
-        "in the event of an institution failure is determined exclusively by the FDIC based upon the official "
-        "books and records of the failed depository institution, federal statutory guidelines, and applicable "
-        "state law at the time of resolution. Deposits in non-FDIC insured institutions or non-deposit products "
+        "and reference EDIE calculation standards. This software was developed independently using publicly available "
+        "regulations and data; it is NOT an official FDIC product and is NOT created, sponsored, or endorsed by the FDIC. "
+        "Actual deposit insurance coverage in the event of an institution failure is determined exclusively by the FDIC "
+        "based upon the official books and records of the failed depository institution, federal statutory guidelines, and "
+        "applicable state law at the time of resolution. Deposits in non-insured institutions or non-deposit products "
         "(mutual funds, securities, annuities, cryptocurrencies) are not covered."
     )
 
