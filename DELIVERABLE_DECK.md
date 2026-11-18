@@ -210,7 +210,7 @@ tests/test_server.py::test_mcp_calculate_tool_invocation PASSED          [ 97%]
 ## Slide 8: Lessons Learned & Recommendations
 
 ### 1. Differential Testing Proves Legally Binding Parity
-* When replacing legacy government calculators with agentic MCP servers, differential parallel testing against the legacy code (here, `deposit_insurance_calculator.js` via Node.js) gives stakeholders and judges quantifiable proof that no calculation drift has occurred.
+* When replacing legacy government calculators with agentic MCP servers, differential parallel testing against the legacy code (here, `edie.js` via Node.js) gives stakeholders and judges quantifiable proof that no calculation drift has occurred.
 
 ### 2. Encode Regulatory Truth in Code, Not System Prompts
 * LLMs frequently hallucinate or misapply nuanced federal regulations (e.g., applying outdated trust rules or failing to aggregate sole proprietorships).
