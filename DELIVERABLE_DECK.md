@@ -220,10 +220,9 @@ tests/test_server.py::test_mcp_calculate_tool_invocation PASSED          [ 97%]
 ---
 
 ### Project Repository & Artifacts Summary
-* **Server Implementation:** [`server.py`](file:///c:/Users/prasa/Documents/Sharmila/GSA%20Hackathon/server.py)
-* **Calculation Engine & 12 CFR Part 330 Rules:** [`fdic_engine.py`](file:///c:/Users/prasa/Documents/Sharmila/GSA%20Hackathon/fdic_engine.py)
-* **Databricks Container Configuration:** [`app.yaml`](file:///c:/Users/prasa/Documents/Sharmila/GSA%20Hackathon/app.yaml)
-* **37-Test Automated Suite:** [`tests/test_server.py`](file:///c:/Users/prasa/Documents/Sharmila/GSA%20Hackathon/tests/test_server.py) & [`tests/test_parallel_edie.py`](file:///c:/Users/prasa/Documents/Sharmila/GSA%20Hackathon/tests/test_parallel_edie.py)
-* **Visual Parallel Parity Runner:** [`parallel_test_runner.py`](file:///c:/Users/prasa/Documents/Sharmila/GSA%20Hackathon/parallel_test_runner.py)
-* **Local 5-Phase Verifier:** [`local_test.py`](file:///c:/Users/prasa/Documents/Sharmila/GSA%20Hackathon/local_test.py)
-* **Evaluation Document:** [`EVALUATION_DOCUMENT.md`](file:///c:/Users/prasa/Documents/Sharmila/GSA%20Hackathon/EVALUATION_DOCUMENT.md)
+* **Server Implementation:** `server.py`
+* **Calculation Engine & 12 CFR Part 330 Rules:** `fdic_engine.py`
+* **Databricks Container Configuration:** `app.yaml`
+* **37-Test Automated Suite:** `tests/test_server.py` & `tests/test_parallel_edie.py`
+* **Visual Parallel Parity Runner:** `parallel_test_runner.py`
+* **Local 5-Phase Verifier:** `local_test.py`
