@@ -1,4 +1,4 @@
-"""Visual Parallel Test Runner: EDIE (JavaScript) vs. Deposit Insurance Calculator MCP Tool (Python).
+"""Visual Parallel Test Runner: Reference Calculator (JavaScript) vs. Deposit Insurance Calculator MCP Tool (Python).
 
 Runs differential verification tests against identical deposit portfolios and displays
 a side-by-side audit report proving mathematical equivalence across all deposit insurance categories.
@@ -11,12 +11,12 @@ import subprocess
 from pathlib import Path
 from server import calculate_deposit_insurance
 
-EDIE_JS_PATH = Path(__file__).resolve().parent / "edie_calc_reference.js"
+CALC_JS_PATH = Path(__file__).resolve().parent / "deposit_insurance_calc_reference.js"
 
 
-def run_edie_js(accounts_payload: list) -> dict:
+def run_reference_js(accounts_payload: list) -> dict:
     proc = subprocess.run(
-        ["node", str(EDIE_JS_PATH)],
+        ["node", str(CALC_JS_PATH)],
         input=json.dumps(accounts_payload),
         capture_output=True,
         text=True,
@@ -34,45 +34,45 @@ def compare_scenario(name: str, accounts: list) -> bool:
     print(f" SCENARIO: {name}")
     print("-" * 75)
 
-    # 1. Run EDIE JS
-    edie_res = run_edie_js(accounts)
+    # 1. Run Reference Calculator JS
+    ref_res = run_reference_js(accounts)
 
     # 2. Run Python MCP Tool
     mcp_res = calculate_deposit_insurance(accounts=accounts)
     mcp_summary = mcp_res["summary"]
 
     # 3. Print Side-by-Side Comparison
-    headers = f"{'Metric':<25} | {'EDIE Calculator (JS)':<22} | {'MCP Server Tool (Py)':<22} | {'Match?'}"
+    headers = f"{'Metric':<25} | {'Reference Calc (JS) ':<22} | {'MCP Server Tool (Py)':<22} | {'Match?'}"
     print(headers)
     print("-" * 75)
 
     metrics = [
-        ("Total Balance", edie_res["total_balance"], mcp_summary["total_balance"], True),
-        ("Total Insured", edie_res["total_insured"], mcp_summary["total_insured"], True),
-        ("Total Uninsured", edie_res["total_uninsured"], mcp_summary["total_uninsured"], True),
-        ("Coverage Percent", f"{edie_res['percent_insured']}%", f"{mcp_summary['percent_insured']}%", False)
+        ("Total Balance", ref_res["total_balance"], mcp_summary["total_balance"], True),
+        ("Total Insured", ref_res["total_insured"], mcp_summary["total_insured"], True),
+        ("Total Uninsured", ref_res["total_uninsured"], mcp_summary["total_uninsured"], True),
+        ("Coverage Percent", f"{ref_res['percent_insured']}%", f"{mcp_summary['percent_insured']}%", False)
     ]
 
     all_match = True
-    for label, edie_val, mcp_val, is_curr in metrics:
+    for label, ref_val, mcp_val, is_curr in metrics:
         if is_curr:
-            match = abs(float(edie_val) - float(mcp_val)) < 0.01
-            edie_str = format_currency(float(edie_val))
+            match = abs(float(ref_val) - float(mcp_val)) < 0.01
+            ref_str = format_currency(float(ref_val))
             mcp_str = format_currency(float(mcp_val))
         else:
-            match = (edie_val == mcp_val)
-            edie_str = str(edie_val)
+            match = (ref_val == mcp_val)
+            ref_str = str(ref_val)
             mcp_str = str(mcp_val)
 
         match_str = "[MATCH]" if match else "[MISMATCH]"
         if not match:
             all_match = False
-        print(f"{label:<25} | {edie_str:<22} | {mcp_str:<22} | {match_str}")
+        print(f"{label:<25} | {ref_str:<22} | {mcp_str:<22} | {match_str}")
 
     print("\n  --> Account Allocation Parity:")
-    edie_map = {a["account_id"]: a for a in edie_res["accounts"]}
+    ref_map = {a["account_id"]: a for a in ref_res["accounts"]}
     for acc in mcp_res["account_details"]:
-        e_acc = edie_map[acc["account_id"]]
+        e_acc = ref_map[acc["account_id"]]
         acc_match = (
             abs(acc["insured_amount"] - e_acc["insured"]) < 0.05 and
             abs(acc["uninsured_amount"] - e_acc["uninsured"]) < 0.05
@@ -87,7 +87,7 @@ def compare_scenario(name: str, accounts: list) -> bool:
 
 def main() -> None:
     print("=" * 75)
-    print(" PARALLEL TEST SUITE: EDIE CALCULATOR VS. MCP TOOL SERVER")
+    print(" PARALLEL TEST SUITE: REFERENCE CALCULATOR VS. MCP TOOL SERVER")
     print("=" * 75)
 
     scenarios = [
@@ -151,7 +151,7 @@ def main() -> None:
     print("\n" + "=" * 75)
     print(f" PARALLEL AUDIT RESULT: {total_passed}/{len(scenarios)} SCENARIOS FULLY VERIFIED")
     if total_passed == len(scenarios):
-        print(" VERDICT: 100% MATHEMATICAL PARITY CONFIRMED WITH EDIE REFERENCE CALCULATOR!")
+        print(" VERDICT: 100% MATHEMATICAL PARITY CONFIRMED WITH REFERENCE CALCULATOR!")
     print("=" * 75)
 
 

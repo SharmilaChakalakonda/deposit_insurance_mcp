@@ -1,7 +1,7 @@
-"""Parallel Differential Testing: Official EDIE (JavaScript) vs. Python FDIC MCP Tool.
+"""Parallel Differential Testing: Official Reference Calculator (JavaScript) vs. Python FDIC MCP Tool.
 
 Executes identical deposit account portfolios across both:
-1. The FDIC EDIE JavaScript reference engine (edie.js)
+1. The FDIC Reference Calculator JavaScript reference engine (reference_calculator.js)
 2. The Python FDIC MCP Server calculation engine (fdic_engine.py / server.py)
 
 Asserts 100% mathematical parity across:
@@ -25,13 +25,13 @@ from deposit_insurance_engine import (
 )
 from server import calculate_deposit_insurance
 
-EDIE_JS_PATH = Path(__file__).resolve().parent.parent / "edie_calc_reference.js"
+CALC_JS_PATH = Path(__file__).resolve().parent.parent / "deposit_insurance_calc_reference.js"
 
 
-def run_edie_js(accounts_payload: list) -> dict:
-    """Executes the official EDIE calculation in JavaScript via Node.js."""
+def run_reference_js(accounts_payload: list) -> dict:
+    """Executes the reference deposit insurance calculation in JavaScript via Node.js."""
     proc = subprocess.run(
-        ["node", str(EDIE_JS_PATH)],
+        ["node", str(CALC_JS_PATH)],
         input=json.dumps(accounts_payload),
         capture_output=True,
         text=True,
@@ -42,8 +42,8 @@ def run_edie_js(accounts_payload: list) -> dict:
 
 def assert_parallel_parity(accounts_raw: list):
     """Runs parallel calculation on both engines and verifies identical outputs."""
-    # 1. Run EDIE JavaScript Engine
-    edie_res = run_edie_js(accounts_raw)
+    # 1. Run Reference Calculator JavaScript Engine
+    ref_res = run_reference_js(accounts_raw)
 
     # 2. Run Python MCP Tool
     p_accs = [AccountInput(**a) for a in accounts_raw]
@@ -51,29 +51,29 @@ def assert_parallel_parity(accounts_raw: list):
     py_tool_res = calculate_deposit_insurance(accounts=accounts_raw)
 
     # 3. Assert High-Level Totals Match Exactly
-    assert pytest.approx(py_res.summary.total_balance, abs=0.01) == edie_res["total_balance"], \
-        f"Total balance mismatch: Py={py_res.summary.total_balance} vs JS={edie_res['total_balance']}"
+    assert pytest.approx(py_res.summary.total_balance, abs=0.01) == ref_res["total_balance"], \
+        f"Total balance mismatch: Py={py_res.summary.total_balance} vs JS={ref_res['total_balance']}"
 
-    assert pytest.approx(py_res.summary.total_insured, abs=0.01) == edie_res["total_insured"], \
-        f"Total insured mismatch: Py={py_res.summary.total_insured} vs JS={edie_res['total_insured']}"
+    assert pytest.approx(py_res.summary.total_insured, abs=0.01) == ref_res["total_insured"], \
+        f"Total insured mismatch: Py={py_res.summary.total_insured} vs JS={ref_res['total_insured']}"
 
-    assert pytest.approx(py_res.summary.total_uninsured, abs=0.01) == edie_res["total_uninsured"], \
-        f"Total uninsured mismatch: Py={py_res.summary.total_uninsured} vs JS={edie_res['total_uninsured']}"
+    assert pytest.approx(py_res.summary.total_uninsured, abs=0.01) == ref_res["total_uninsured"], \
+        f"Total uninsured mismatch: Py={py_res.summary.total_uninsured} vs JS={ref_res['total_uninsured']}"
 
-    assert pytest.approx(py_res.summary.percent_insured, abs=0.05) == edie_res["percent_insured"], \
-        f"Coverage percent mismatch: Py={py_res.summary.percent_insured}% vs JS={edie_res['percent_insured']}%"
+    assert pytest.approx(py_res.summary.percent_insured, abs=0.05) == ref_res["percent_insured"], \
+        f"Coverage percent mismatch: Py={py_res.summary.percent_insured}% vs JS={ref_res['percent_insured']}%"
 
     # Also verify tool dict output matches
-    assert pytest.approx(py_tool_res["summary"]["total_insured"], abs=0.01) == edie_res["total_insured"]
+    assert pytest.approx(py_tool_res["summary"]["total_insured"], abs=0.01) == ref_res["total_insured"]
 
     # 4. Assert Individual Account Allocations Match
-    edie_acc_map = {a["account_id"]: a for a in edie_res["accounts"]}
+    reference_calculator_acc_map = {a["account_id"]: a for a in ref_res["accounts"]}
     for py_acc in py_res.account_details:
-        edie_acc = edie_acc_map[py_acc.account_id]
-        assert pytest.approx(py_acc.insured_amount, abs=0.05) == edie_acc["insured"], \
-            f"Account {py_acc.account_id} insured mismatch: Py={py_acc.insured_amount} vs JS={edie_acc['insured']}"
-        assert pytest.approx(py_acc.uninsured_amount, abs=0.05) == edie_acc["uninsured"], \
-            f"Account {py_acc.account_id} uninsured mismatch: Py={py_acc.uninsured_amount} vs JS={edie_acc['uninsured']}"
+        reference_calculator_acc = reference_calculator_acc_map[py_acc.account_id]
+        assert pytest.approx(py_acc.insured_amount, abs=0.05) == reference_calculator_acc["insured"], \
+            f"Account {py_acc.account_id} insured mismatch: Py={py_acc.insured_amount} vs JS={reference_calculator_acc['insured']}"
+        assert pytest.approx(py_acc.uninsured_amount, abs=0.05) == reference_calculator_acc["uninsured"], \
+            f"Account {py_acc.account_id} uninsured mismatch: Py={py_acc.uninsured_amount} vs JS={reference_calculator_acc['uninsured']}"
 
 
 # =====================================================================

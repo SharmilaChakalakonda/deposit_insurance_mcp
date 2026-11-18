@@ -1,6 +1,6 @@
 """Comprehensive Scenario Analysis: John and Maria Johnson.
 
-Tests the scenario in both the EDIE JavaScript Reference Engine and the Python MCP Tool.
+Tests the scenario in both the Reference Calculator JavaScript Reference Engine and the Python MCP Tool.
 Evaluates:
 - Current coverage under the 6-month grace period (12 CFR § 330.3(j))
 - Post-grace period outcomes based on trust beneficiary substitution
@@ -12,7 +12,7 @@ import subprocess
 from pathlib import Path
 from server import calculate_deposit_insurance
 
-EDIE_JS_PATH = Path(__file__).resolve().parent / "edie_calc_reference.js"
+CALC_JS_PATH = Path(__file__).resolve().parent / "deposit_insurance_calc_reference.js"
 
 
 def run_both(label: str, accounts: list) -> dict:
@@ -20,24 +20,24 @@ def run_both(label: str, accounts: list) -> dict:
     print(f" {label}")
     print("=" * 78)
 
-    # 1. Run EDIE JS
+    # 1. Run Reference JS
     proc = subprocess.run(
-        ["node", str(EDIE_JS_PATH)],
+        ["node", str(CALC_JS_PATH)],
         input=json.dumps(accounts),
         capture_output=True,
         text=True,
         check=True
     )
-    edie_res = json.loads(proc.stdout)
+    ref_res = json.loads(proc.stdout)
 
     # 2. Run Python MCP Tool
     mcp_res = calculate_deposit_insurance(accounts=accounts)
     s = mcp_res["summary"]
 
-    print(f"Total Balance:   ${s['total_balance']:,.2f}  | EDIE JS: ${edie_res['total_balance']:,.2f}  [MATCH]")
-    print(f"Total Insured:   ${s['total_insured']:,.2f}  | EDIE JS: ${edie_res['total_insured']:,.2f}  [MATCH]")
-    print(f"Total Uninsured: ${s['total_uninsured']:,.2f}  | EDIE JS: ${edie_res['total_uninsured']:,.2f}  [MATCH]")
-    print(f"Coverage Ratio:  {s['percent_insured']}%  | EDIE JS: {edie_res['percent_insured']}%  [MATCH]")
+    print(f"Total Balance:   ${s['total_balance']:,.2f}  | Reference JS: ${ref_res['total_balance']:,.2f}  [MATCH]")
+    print(f"Total Insured:   ${s['total_insured']:,.2f}  | Reference JS: ${ref_res['total_insured']:,.2f}  [MATCH]")
+    print(f"Total Uninsured: ${s['total_uninsured']:,.2f}  | Reference JS: ${ref_res['total_uninsured']:,.2f}  [MATCH]")
+    print(f"Coverage Ratio:  {s['percent_insured']}%  | Reference JS: {ref_res['percent_insured']}%  [MATCH]")
 
     print("\nAccount Details (Python MCP Server):")
     for acc in mcp_res["account_details"]:

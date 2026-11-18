@@ -6,7 +6,7 @@
 [![Federal Regulations](https://img.shields.io/badge/FDIC-12%20CFR%20Part%20330-red.svg)](https://www.ecfr.gov/current/title-12/chapter-III/subchapter-B/part-330)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 
-Production-grade Model Context Protocol (MCP) server that interfaces with federal deposit insurance regulations and calculations to replace traditional manual calculator lookups (such as FDIC EDIE).
+Production-grade Model Context Protocol (MCP) server that interfaces with federal deposit insurance regulations and calculations to replace traditional manual calculator lookups (such as FDIC Deposit Insurance Calculator).
 
 Built for the **GSA MCP Server and SI Agent Government Hackathon** and optimized for zero-configuration container deployment on **Databricks Apps**.
 
@@ -107,17 +107,17 @@ Returns official regulatory guidance, formulas, statutory citations, and common 
 
 ---
 
-## 🧪 Local Testing & Parallel Verification with FDIC EDIE
+## 🧪 Local Testing & Parallel Verification with FDIC Deposit Insurance Calculator
 
-### 1. Parallel Differential Testing (EDIE JS vs. Python MCP Server)
-The repository includes a parallel differential testing harness that downloads and runs the actual calculation algorithms from [`https://edie.fdic.gov/javascript/edie.js`](https://edie.fdic.gov/javascript/edie.js) via Node.js in parallel with the Python MCP Server, ensuring **100% mathematical parity**:
+### 1. Parallel Differential Testing (Deposit Insurance Calculator JS vs. Python MCP Server)
+The repository includes a parallel differential testing harness that downloads and runs the actual calculation algorithms from [`https://deposit_insurance_calculator.fdic.gov/javascript/deposit_insurance_calculator.js`](https://deposit_insurance_calculator.fdic.gov/javascript/deposit_insurance_calculator.js) via Node.js in parallel with the Python MCP Server, ensuring **100% mathematical parity**:
 
 ```bash
 # Run visual side-by-side comparison
 python parallel_test_runner.py
 
 # Run automated differential test suite
-python -m pytest -v tests/test_parallel_edie.py
+python -m pytest -v tests/test_parallel_calculator.py
 ```
 
 ### 2. Full Regression Test Suite (37 Tests)

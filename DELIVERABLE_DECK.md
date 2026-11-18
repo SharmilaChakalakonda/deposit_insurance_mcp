@@ -27,7 +27,7 @@ On April 1, 2024, the FDIC enacted its biggest rule change in decades:
 * Most online calculators, estate articles, and financial tools are outdated and fail to reflect this cap.
 
 ### 3. Legacy Web Calculators & Manual Overhead
-* The official [FDIC EDIE Calculator](https://edie.fdic.gov/) is a legacy web form requiring dozens of manual clicks per account.
+* The official [FDIC Deposit Insurance Calculator Calculator](https://deposit_insurance_calculator.fdic.gov/) is a legacy web form requiring dozens of manual clicks per account.
 * Cannot evaluate multi-bank portfolios or corporate cash sweeps in bulk.
 * Closed to AI agents and automated financial platforms.
 
@@ -109,7 +109,7 @@ class AccountInput(BaseModel):
 The submission includes three runnable demonstration flows:
 
 ### Demo 1: Visual Parallel Test Runner (`python parallel_test_runner.py`)
-* Compares 6 complex enterprise scenarios side-by-side against the FDIC EDIE JavaScript reference engine:
+* Compares 6 complex enterprise scenarios side-by-side against the FDIC Deposit Insurance Calculator JavaScript reference engine:
   * Single depositors over \$250k.
   * Joint accounts with 2+ owners.
   * Trusts under the 2024 5-beneficiary cap.
@@ -143,17 +143,17 @@ The submission includes three runnable demonstration flows:
                                       │
                ┌──────────────────────┴──────────────────────┐
                ▼                                             ▼
-     tests/test_server.py                        tests/test_parallel_edie.py
+     tests/test_server.py                        tests/test_parallel_calculator.py
   (23 Integration & Unit Tests)                  (14 Differential Test Cases)
                │                                             │
                │                                   ┌─────────┴─────────┐
                ▼                                   ▼                   ▼
     Python FastMCP Server                     Python Engine       Node.js Bridge
-   (Streamable HTTP /mcp)                   (deposit_insurance_engine.py)   (edie_calc_reference.js)
+   (Streamable HTTP /mcp)                   (deposit_insurance_engine.py)   (deposit_insurance_calc_reference.js)
 ```
 
 ### Evaluation Components:
-1. **Official Upstream JS Reference:** Extracted calculation logic directly from `https://edie.fdic.gov/javascript/edie.js`.
+1. **Official Upstream JS Reference:** Extracted calculation logic directly from `https://deposit_insurance_calculator.fdic.gov/javascript/deposit_insurance_calculator.js`.
 2. **Automated Differential Suite:** Pytest launches Node.js subprocesses to execute identical JSON account payloads on both engines and asserts zero numerical divergence.
 3. **Statutory Coverage Suite:** Verifies edge cases including sole proprietorship aggregations, cross-joint owner shares, in-state vs. out-of-state public unit pools, and 2024 trust beneficiary limits.
 
@@ -166,18 +166,18 @@ The submission includes three runnable demonstration flows:
 |---|---|---|
 | **Total Automated Tests** | 30+ tests | **37 Tests** |
 | **Pass Rate** | 100% | **100% (37 / 37 Passing)** |
-| **Differential Parity vs. FDIC EDIE** | Exact penny match | **$0.00 Variance (100% Parity)** |
+| **Differential Parity vs. FDIC Deposit Insurance Calculator** | Exact penny match | **$0.00 Variance (100% Parity)** |
 | **Test Suite Execution Time** | < 15 seconds | **6.31 seconds** |
 | **Average Tool Latency** | < 50 milliseconds | **< 5 milliseconds** |
 | **Protocol Compatibility** | JSON-RPC 2.0 / Streamable HTTP | **Full MCP Conformance** |
 
 ```
 ============================= test session starts =============================
-tests/test_parallel_edie.py::test_parallel_single_accounts PASSED        [  2%]
-tests/test_parallel_edie.py::test_parallel_sole_proprietorship_dba PASSED [  8%]
-tests/test_parallel_edie.py::test_parallel_trust_beneficiary_cap_5 PASSED [ 21%]
-tests/test_parallel_edie.py::test_parallel_government_in_state PASSED    [ 29%]
-tests/test_parallel_edie.py::test_parallel_complex_multi_category_portfolio PASSED [ 37%]
+tests/test_parallel_calculator.py::test_parallel_single_accounts PASSED        [  2%]
+tests/test_parallel_calculator.py::test_parallel_sole_proprietorship_dba PASSED [  8%]
+tests/test_parallel_calculator.py::test_parallel_trust_beneficiary_cap_5 PASSED [ 21%]
+tests/test_parallel_calculator.py::test_parallel_government_in_state PASSED    [ 29%]
+tests/test_parallel_calculator.py::test_parallel_complex_multi_category_portfolio PASSED [ 37%]
 tests/test_server.py::test_single_account_over_limit PASSED              [ 43%]
 tests/test_server.py::test_trust_two_grantors PASSED                     [ 64%]
 tests/test_server.py::test_mcp_tools_list PASSED                         [ 94%]
@@ -210,7 +210,7 @@ tests/test_server.py::test_mcp_calculate_tool_invocation PASSED          [ 97%]
 ## Slide 8: Lessons Learned & Recommendations
 
 ### 1. Differential Testing Proves Legally Binding Parity
-* When replacing legacy government calculators with agentic MCP servers, differential parallel testing against the legacy code (here, `edie.js` via Node.js) gives stakeholders and judges quantifiable proof that no calculation drift has occurred.
+* When replacing legacy government calculators with agentic MCP servers, differential parallel testing against the legacy code (here, `deposit_insurance_calculator.js` via Node.js) gives stakeholders and judges quantifiable proof that no calculation drift has occurred.
 
 ### 2. Encode Regulatory Truth in Code, Not System Prompts
 * LLMs frequently hallucinate or misapply nuanced federal regulations (e.g., applying outdated trust rules or failing to aggregate sole proprietorships).
@@ -225,6 +225,6 @@ tests/test_server.py::test_mcp_calculate_tool_invocation PASSED          [ 97%]
 * **Server Implementation:** `server.py`
 * **Calculation Engine & 12 CFR Part 330 Rules:** `fdic_engine.py`
 * **Databricks Container Configuration:** `app.yaml`
-* **37-Test Automated Suite:** `tests/test_server.py` & `tests/test_parallel_edie.py`
+* **37-Test Automated Suite:** `tests/test_server.py` & `tests/test_parallel_calculator.py`
 * **Visual Parallel Parity Runner:** `parallel_test_runner.py`
 * **Local 5-Phase Verifier:** `local_test.py`

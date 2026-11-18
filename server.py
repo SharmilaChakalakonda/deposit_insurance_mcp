@@ -6,7 +6,7 @@ calculations and regulatory guidance to replace manual calculator lookups.
 Conforms to:
 - 12 CFR Part 330 (Deposit Insurance Coverage Regulations)
 - Financial Institution Employee's Guide to Deposit Insurance
-- Electronic Deposit Insurance Estimator (EDIE) calculation standards
+- Electronic Deposit Insurance Estimator (Deposit Insurance Calculator) calculation standards
 - Trust Rule Simplification (Effective April 1, 2024; 12 CFR § 330.10)
 - Databricks Apps container deployment requirements
 - GSA Open Source & Super Intelligence (SI) CoP standards
@@ -77,7 +77,7 @@ def calculate_deposit_insurance(
 
     Accurately estimates deposit insurance coverage for personal, business, trust,
     and government accounts at FDIC-insured institutions, mirroring the official
-    FDIC Electronic Deposit Insurance Estimator (EDIE) logic and 12 CFR Part 330.
+    FDIC Electronic Deposit Insurance Estimator (Deposit Insurance Calculator) logic and 12 CFR Part 330.
 
     Args:
         accounts: A list of deposit accounts to evaluate. Each account specifies:
@@ -246,7 +246,7 @@ async def root_info() -> Dict[str, Any]:
     port = int(os.environ.get("DATABRICKS_APP_PORT", 8000))
     return {
         "service": "Deposit Insurance Calculator MCP Server",
-        "description": "Production-grade MCP server interfacing with deposit insurance regulations and EDIE calculations.",
+        "description": "Production-grade MCP server interfacing with deposit insurance regulations and Deposit Insurance Calculator calculations.",
         "disclaimer": "This is an independent open-source project built with publicly available data and tools. It is NOT an official FDIC tool or official FDIC MCP server.",
         "status": "operational",
         "version": "1.0.0",

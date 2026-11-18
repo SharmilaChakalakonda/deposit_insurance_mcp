@@ -3,7 +3,7 @@
 Sourced from:
 - 12 CFR Part 330 (Deposit Insurance Coverage Regulations)
 - Financial Institution Employee's Guide to Deposit Insurance
-- Electronic Deposit Insurance Estimator (EDIE) calculation standards
+- Electronic Deposit Insurance Estimator (Deposit Insurance Calculator) calculation standards
 - Trust Rule Simplification (Effective April 1, 2024; 12 CFR § 330.10)
 """
 
@@ -232,7 +232,7 @@ def calculate_portfolio_insurance(
     smdia: float = SMDIA_DEFAULT
 ) -> InsuranceCalculationResult:
     """
-    Executes the FDIC EDIE-compliant deposit insurance calculation algorithm.
+    Executes the FDIC Deposit Insurance Calculator-compliant deposit insurance calculation algorithm.
     Evaluates accounts per insured institution, per ownership category, and per depositor/custodian.
     """
     if not accounts:
@@ -800,7 +800,7 @@ def _get_fdic_disclaimer() -> str:
     return (
         "FDIC DISCLAIMER: This calculation estimate conforms to standard FDIC deposit insurance rules "
         "under 12 CFR Part 330, the FDIC Financial Institution Employee's Guide to Deposit Insurance, "
-        "and the Electronic Deposit Insurance Estimator (EDIE) algorithm. Actual deposit insurance coverage "
+        "and the Electronic Deposit Insurance Estimator (Deposit Insurance Calculator) algorithm. Actual deposit insurance coverage "
         "in the event of an institution failure is determined exclusively by the FDIC based upon the official "
         "books and records of the failed depository institution, federal statutory guidelines, and applicable "
         "state law at the time of resolution. Deposits in non-FDIC insured institutions or non-deposit products "
@@ -1016,5 +1016,5 @@ def get_rule_guidance(category: Optional[str] = None, topic: Optional[str] = Non
         "available_categories": list(FDIC_GUIDANCE_DB.keys()),
         "key_statutory_categories": {k: v["category"] for k, v in FDIC_GUIDANCE_DB.items()},
         "trust_rule_amendment": "April 1, 2024 unified trust rules cap coverage at 5 beneficiaries per grantor ($1.25M max per grantor per bank).",
-        "guidance_source": "FDIC Financial Institution Employee's Guide to Deposit Insurance & EDIE Calculator"
+        "guidance_source": "FDIC Financial Institution Employee's Guide to Deposit Insurance & Deposit Insurance Calculator Calculator"
     }
