@@ -4,6 +4,8 @@
 *Track: GSA Super Intelligence (SI) Community of Practice*  
 *Deployment: Databricks Apps & FastMCP Streamable HTTP*
 
+> **Disclaimer**: This is an independent hackathon project built using publicly available regulations, data, and tools. It is not an official FDIC tool or official FDIC MCP server.
+
 ---
 
 ## Slide 1: The Challenge

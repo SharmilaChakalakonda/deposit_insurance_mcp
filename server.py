@@ -10,6 +10,10 @@ Conforms to:
 - FDIC Trust Rule Simplification (Effective April 1, 2024; 12 CFR § 330.10)
 - Databricks Apps container deployment requirements
 - GSA Open Source & Super Intelligence (SI) CoP standards
+
+DISCLAIMER:
+This project was developed independently using publicly available information, data,
+and tools. This is NOT an official FDIC tool or official FDIC MCP server.
 """
 
 from __future__ import annotations
@@ -244,6 +248,7 @@ async def root_info() -> Dict[str, Any]:
     return {
         "service": "FDIC Deposit Insurance MCP Server",
         "description": "Production-grade MCP server interfacing with FDIC deposit insurance regulations and EDIE calculations.",
+        "disclaimer": "This is an independent open-source project built with publicly available data and tools. It is NOT an official FDIC tool or official FDIC MCP server.",
         "status": "operational",
         "version": "1.0.0",
         "compliance": [

@@ -10,6 +10,9 @@ Production-grade Model Context Protocol (MCP) server that interfaces with Federa
 
 Built for the **GSA MCP Server and SI Agent Government Hackathon** and optimized for zero-configuration container deployment on **Databricks Apps**.
 
+> [!IMPORTANT]
+> **Disclaimer**: This project is developed independently using publicly available regulations, documentation, and tools (including 12 CFR Part 330 and the FDIC Financial Institution Employee's Guide). This is **not** an official FDIC tool, software, or Model Context Protocol (MCP) server, and is not affiliated with, sponsored by, or endorsed by the Federal Deposit Insurance Corporation (FDIC) or the U.S. Government.
+
 ---
 
 ## 🏛️ Regulatory Authority & Compliance
