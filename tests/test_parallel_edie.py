@@ -16,7 +16,7 @@ import json
 import subprocess
 from pathlib import Path
 import pytest
-from fdic_engine import (
+from deposit_insurance_engine import (
     AccountCategory,
     AccountInput,
     DepositType,

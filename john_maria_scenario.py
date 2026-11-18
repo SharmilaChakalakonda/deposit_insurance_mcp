@@ -1,6 +1,6 @@
 """Comprehensive Scenario Analysis: John and Maria Johnson.
 
-Tests the scenario in both the FDIC EDIE JavaScript Reference Engine and the Python FDIC MCP Tool.
+Tests the scenario in both the EDIE JavaScript Reference Engine and the Python MCP Tool.
 Evaluates:
 - Current coverage under the 6-month grace period (12 CFR § 330.3(j))
 - Post-grace period outcomes based on trust beneficiary substitution
@@ -55,7 +55,7 @@ def run_both(label: str, accounts: list) -> dict:
 
 def main():
     print("*" * 78)
-    print(" FDIC DEPOSIT INSURANCE AUDIT: JOHN AND MARIA JOHNSON CASE STUDY")
+    print(" DEPOSIT INSURANCE AUDIT: JOHN AND MARIA JOHNSON CASE STUDY")
     print("*" * 78)
 
     # Case 1: Today (2 months after Samuel's death -> 6-Month Grace Period ACTIVE)

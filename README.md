@@ -1,4 +1,4 @@
-# FDIC Deposit Insurance Model Context Protocol (MCP) Server
+# Deposit Insurance Calculator MCP Server
 
 [![GSA Hackathon](https://img.shields.io/badge/GSA-SI%20Community%20of%20Practice-blue.svg)](https://www.gsa.gov/super-intelligence/si-community-of-practice/events-and-training/mcp-server-and-si-agent-government-hackathon)
 [![Protocol](https://img.shields.io/badge/MCP-Streamable%20HTTP-green.svg)](https://modelcontextprotocol.io)
@@ -6,7 +6,7 @@
 [![Federal Regulations](https://img.shields.io/badge/FDIC-12%20CFR%20Part%20330-red.svg)](https://www.ecfr.gov/current/title-12/chapter-III/subchapter-B/part-330)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 
-Production-grade Model Context Protocol (MCP) server that interfaces with Federal Deposit Insurance Corporation (FDIC) deposit insurance regulations and calculations to replace traditional manual calculator lookups (such as [FDIC EDIE](https://edie.fdic.gov/)).
+Production-grade Model Context Protocol (MCP) server that interfaces with federal deposit insurance regulations and calculations to replace traditional manual calculator lookups (such as FDIC EDIE).
 
 Built for the **GSA MCP Server and SI Agent Government Hackathon** and optimized for zero-configuration container deployment on **Databricks Apps**.
 
@@ -98,7 +98,7 @@ Returns official regulatory guidance, formulas, statutory citations, and common 
 ├── app.yaml               # Databricks Apps application deployment manifest
 ├── requirements.txt       # Production dependencies
 ├── server.py              # Main FastMCP server and FastAPI application entrypoint
-├── fdic_engine.py         # Calculation engine, Pydantic schemas & FDIC rule repository
+├── deposit_insurance_engine.py # Calculation engine, Pydantic schemas & regulatory rule repository
 ├── local_test.py          # Standalone verification script (runs 5 test phases locally)
 ├── tests/
 │   └── test_server.py     # Comprehensive pytest test suite (23 test cases)

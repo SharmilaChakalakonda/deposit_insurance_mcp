@@ -1,13 +1,13 @@
-"""FDIC Deposit Insurance MCP Server - GSA Hackathon & Databricks Apps Edition.
+"""Deposit Insurance Calculator MCP Server - GSA Hackathon & Databricks Apps Edition.
 
-Production-grade Model Context Protocol (MCP) server providing FDIC deposit insurance
+Production-grade Model Context Protocol (MCP) server providing deposit insurance
 calculations and regulatory guidance to replace manual calculator lookups.
 
 Conforms to:
 - 12 CFR Part 330 (Deposit Insurance Coverage Regulations)
-- FDIC Financial Institution Employee's Guide to Deposit Insurance
-- FDIC Electronic Deposit Insurance Estimator (EDIE) calculation standards
-- FDIC Trust Rule Simplification (Effective April 1, 2024; 12 CFR § 330.10)
+- Financial Institution Employee's Guide to Deposit Insurance
+- Electronic Deposit Insurance Estimator (EDIE) calculation standards
+- Trust Rule Simplification (Effective April 1, 2024; 12 CFR § 330.10)
 - Databricks Apps container deployment requirements
 - GSA Open Source & Super Intelligence (SI) CoP standards
 
@@ -30,7 +30,7 @@ from fastapi.responses import JSONResponse
 from fastmcp import FastMCP
 from pydantic import ValidationError
 
-from fdic_engine import (
+from deposit_insurance_engine import (
     AccountCategory,
     AccountInput,
     DepositType,
@@ -50,19 +50,18 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     handlers=[logging.StreamHandler(sys.stdout)],
 )
-logger = logging.getLogger("fdic-mcp-server")
+logger = logging.getLogger("deposit-insurance-calculator-mcp")
 
 # -----------------------------------------------------------------------------
 # FASTMCP SERVER INITIALIZATION
 # -----------------------------------------------------------------------------
 mcp = FastMCP(
-    name="FDIC Deposit Insurance MCP Server",
+    name="Deposit Insurance Calculator MCP Server",
     instructions=(
-        "Authoritative Federal Deposit Insurance Corporation (FDIC) deposit insurance "
-        "calculation and regulatory guidance server. Accurately calculates insurance coverage "
-        "and uninsured balances for individual depositors, businesses, trusts, joint accounts, "
-        "and government entities across insured institutions, strictly adhering to 12 CFR Part 330 "
-        "and the 2024 FDIC Trust Rules."
+        "Deposit insurance calculation and regulatory guidance server. "
+        "Accurately calculates insurance coverage and uninsured balances for individual depositors, "
+        "businesses, trusts, joint accounts, and government entities across insured institutions, "
+        "strictly adhering to 12 CFR Part 330 and the 2024 Trust Rules."
     ),
 )
 
@@ -213,9 +212,9 @@ mcp_asgi_app = mcp.http_app(path="/", transport="streamable-http", stateless_htt
 
 # Main FastAPI application
 app = FastAPI(
-    title="FDIC Deposit Insurance MCP Server",
+    title="Deposit Insurance Calculator MCP Server",
     description=(
-        "Production-grade Model Context Protocol (MCP) server providing FDIC deposit insurance "
+        "Production-grade Model Context Protocol (MCP) server providing deposit insurance "
         "calculations and regulatory guidance. Built for the GSA MCP Server & SI Agent Government "
         "Hackathon and fully compatible with Databricks Apps deployment."
     ),
@@ -246,15 +245,15 @@ async def root_info() -> Dict[str, Any]:
     """Root metadata endpoint providing service status and API navigation."""
     port = int(os.environ.get("DATABRICKS_APP_PORT", 8000))
     return {
-        "service": "FDIC Deposit Insurance MCP Server",
-        "description": "Production-grade MCP server interfacing with FDIC deposit insurance regulations and EDIE calculations.",
+        "service": "Deposit Insurance Calculator MCP Server",
+        "description": "Production-grade MCP server interfacing with deposit insurance regulations and EDIE calculations.",
         "disclaimer": "This is an independent open-source project built with publicly available data and tools. It is NOT an official FDIC tool or official FDIC MCP server.",
         "status": "operational",
         "version": "1.0.0",
         "compliance": [
             "12 CFR Part 330",
-            "FDIC Financial Institution Employee's Guide to Deposit Insurance",
-            "FDIC 2024 Trust Rule Simplification",
+            "Financial Institution Employee's Guide to Deposit Insurance",
+            "2024 Trust Rule Simplification",
             "GSA Open Source Guidelines",
             "Databricks Apps Specification"
         ],
@@ -278,7 +277,7 @@ async def health_check() -> Dict[str, Any]:
     port = int(os.environ.get("DATABRICKS_APP_PORT", 8000))
     return {
         "status": "healthy",
-        "service": "fdic-deposit-insurance-mcp",
+        "service": "deposit-insurance-calculator-mcp",
         "port": port,
         "mcp_mounted_path": "/mcp",
         "tools_loaded": ["calculate_deposit_insurance", "get_insurance_rule_guidance"]
@@ -294,7 +293,7 @@ async def api_calculate(accounts: List[AccountInput]) -> Dict[str, Any]:
 
 @app.get("/api/guidance", tags=["REST API"])
 async def api_guidance(category: Optional[str] = None, topic: Optional[str] = None) -> Dict[str, Any]:
-    """Direct REST endpoint for querying FDIC insurance rules and statutory guidance."""
+    """Direct REST endpoint for querying insurance rules and statutory guidance."""
     return get_rule_guidance(category=category, topic=topic)
 
 
@@ -312,7 +311,7 @@ def main() -> None:
         port = 8000
 
     host = "0.0.0.0"
-    logger.info("Starting FDIC Deposit Insurance MCP Server on %s:%d", host, port)
+    logger.info("Starting Deposit Insurance Calculator MCP Server on %s:%d", host, port)
     logger.info("MCP Streamable HTTP transport mounted at http://%s:%d/mcp", host, port)
     logger.info("Interactive OpenAPI documentation at http://%s:%d/docs", host, port)
 

@@ -1,4 +1,4 @@
-# FDIC Deposit Insurance MCP Server
+# Deposit Insurance Calculator MCP Server
 ## Deliverable Deck & Project Presentation
 **GSA MCP Server and AI Agent Government Hackathon**  
 *Track: GSA Super Intelligence (SI) Community of Practice*  
@@ -46,7 +46,7 @@ The **FDIC Deposit Insurance MCP Server** modernizes deposit insurance calculati
                                          │ Streamable HTTP
                                          ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│                   FDIC DEPOSIT INSURANCE MCP SERVER                    │
+│             DEPOSIT INSURANCE CALCULATOR MCP SERVER                    │
 │                                                                        │
 │   FastMCP Streamable HTTP Protocol (/mcp)   │  FastAPI REST (/api)     │
 │   ├─ calculate_deposit_insurance            │  ├─ /api/calculate       │
@@ -57,7 +57,7 @@ The **FDIC Deposit Insurance MCP Server** modernizes deposit insurance calculati
                                      │
                                      ▼
          ┌───────────────────────────────────────────────────────┐
-         │              FDIC ENGINE (fdic_engine.py)             │
+         │     ENGINE (deposit_insurance_engine.py)              │
          │  • 12 CFR § 330.6 Single & Sole Prop Aggregation      │
          │  • 12 CFR § 330.9 Multi-Owner Joint Sharing           │
          │  • 12 CFR § 330.10 Unified 2024 Trust Rule (5 Cap)    │
@@ -76,8 +76,8 @@ The **FDIC Deposit Insurance MCP Server** modernizes deposit insurance calculati
 
 ## Slide 3: Server Design: Key Technical Decisions
 
-### Decision 1: Pure Regulatory Decoupling (`fdic_engine.py` vs. `server.py`)
-* **Architecture:** All regulatory math, Pydantic data models, and statutory knowledge bases are isolated in `fdic_engine.py`, completely independent of FastAPI, FastMCP, or HTTP networking.
+### Decision 1: Pure Regulatory Decoupling (`deposit_insurance_engine.py` vs. `server.py`)
+* **Architecture:** All regulatory math, Pydantic data models, and statutory knowledge bases are isolated in `deposit_insurance_engine.py`, completely independent of FastAPI, FastMCP, or HTTP networking.
 * **Benefits:** Enables running headless parallel differential tests, unit tests, and CLI batch scripts without spinning up web servers.
 
 ### Decision 2: Type-Safe Pydantic v2 Models & 2024 Rule Guardrails
@@ -149,7 +149,7 @@ The submission includes three runnable demonstration flows:
                │                                   ┌─────────┴─────────┐
                ▼                                   ▼                   ▼
     Python FastMCP Server                     Python Engine       Node.js Bridge
-   (Streamable HTTP /mcp)                   (fdic_engine.py)   (edie_calc_reference.js)
+   (Streamable HTTP /mcp)                   (deposit_insurance_engine.py)   (edie_calc_reference.js)
 ```
 
 ### Evaluation Components:

@@ -1,7 +1,7 @@
-"""Visual Parallel Test Runner: EDIE (JavaScript) vs. FDIC Deposit Insurance MCP Tool (Python).
+"""Visual Parallel Test Runner: EDIE (JavaScript) vs. Deposit Insurance Calculator MCP Tool (Python).
 
 Runs differential verification tests against identical deposit portfolios and displays
-a side-by-side audit report proving mathematical equivalence across all FDIC categories.
+a side-by-side audit report proving mathematical equivalence across all deposit insurance categories.
 """
 
 from __future__ import annotations
@@ -87,7 +87,7 @@ def compare_scenario(name: str, accounts: list) -> bool:
 
 def main() -> None:
     print("=" * 75)
-    print(" PARALLEL TEST SUITE: FDIC EDIE CALCULATOR VS. MCP TOOL SERVER")
+    print(" PARALLEL TEST SUITE: EDIE CALCULATOR VS. MCP TOOL SERVER")
     print("=" * 75)
 
     scenarios = [
@@ -151,7 +151,7 @@ def main() -> None:
     print("\n" + "=" * 75)
     print(f" PARALLEL AUDIT RESULT: {total_passed}/{len(scenarios)} SCENARIOS FULLY VERIFIED")
     if total_passed == len(scenarios):
-        print(" VERDICT: 100% MATHEMATICAL PARITY CONFIRMED WITH FDIC EDIE CALCULATOR!")
+        print(" VERDICT: 100% MATHEMATICAL PARITY CONFIRMED WITH EDIE REFERENCE CALCULATOR!")
     print("=" * 75)
 
 

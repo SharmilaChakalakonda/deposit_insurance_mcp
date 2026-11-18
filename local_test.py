@@ -1,4 +1,4 @@
-"""Local Verification Script for FDIC Deposit Insurance MCP Server.
+"""Local Verification Script for Deposit Insurance Calculator MCP Server.
 
 Runs end-to-end tests against the FastAPI application and MCP Streamable HTTP transport
 without requiring external network access.
@@ -19,7 +19,7 @@ def print_banner(text: str) -> None:
 
 
 def run_local_tests() -> None:
-    print_banner("FDIC DEPOSIT INSURANCE MCP SERVER - LOCAL VERIFICATION")
+    print_banner("DEPOSIT INSURANCE CALCULATOR MCP SERVER - LOCAL VERIFICATION")
     with TestClient(app) as client:
         # 1. Health Probe
         print("\n[Step 1/5] Testing Health Check Endpoint (/health)...")
@@ -132,7 +132,7 @@ def run_local_tests() -> None:
         resp = client.post("/mcp/", json=mcp_call_req, headers={"accept": "application/json, text/event-stream"})
         assert resp.status_code == 200, f"MCP tool call failed: {resp.text}"
         print("  --> MCP Tool Call: SUCCESS")
-        print("  --> 2024 FDIC Trust Rule Verification:")
+        print("  --> 2024 Trust Rule Verification:")
         print("      Grantor Alice has 7 beneficiaries, capped at 5 ($1,250,000 maximum).")
         assert "1250000.0" in resp.text
         assert "250000.0" in resp.text

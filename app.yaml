@@ -1,6 +1,6 @@
 # Databricks Apps Configuration
 # GSA MCP Server and SI Agent Government Hackathon
-# FDIC Deposit Insurance Model Context Protocol Server
+# Deposit Insurance Calculator Model Context Protocol Server
 
 command:
   - "python"

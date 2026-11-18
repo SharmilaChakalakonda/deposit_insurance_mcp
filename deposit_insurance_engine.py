@@ -1,10 +1,10 @@
-"""FDIC Deposit Insurance Calculation Engine and Rules Guidance.
+"""Deposit Insurance Calculation Engine and Rules Guidance.
 
 Sourced from:
 - 12 CFR Part 330 (Deposit Insurance Coverage Regulations)
-- FDIC Financial Institution Employee's Guide to Deposit Insurance
-- FDIC Electronic Deposit Insurance Estimator (EDIE) calculation standards
-- FDIC Trust Rule Simplification (Effective April 1, 2024; 12 CFR § 330.10)
+- Financial Institution Employee's Guide to Deposit Insurance
+- Electronic Deposit Insurance Estimator (EDIE) calculation standards
+- Trust Rule Simplification (Effective April 1, 2024; 12 CFR § 330.10)
 """
 
 from __future__ import annotations

@@ -12,7 +12,7 @@ import json
 import pytest
 from starlette.testclient import TestClient
 from server import app
-from fdic_engine import (
+from deposit_insurance_engine import (
     AccountCategory,
     AccountInput,
     DepositType,
@@ -281,7 +281,7 @@ def test_fastapi_health(client):
     assert r.status_code == 200
     data = r.json()
     assert data["status"] == "healthy"
-    assert data["service"] == "fdic-deposit-insurance-mcp"
+    assert data["service"] == "deposit-insurance-calculator-mcp"
     assert "calculate_deposit_insurance" in data["tools_loaded"]
 
 
