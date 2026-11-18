@@ -1,0 +1,13 @@
+# Databricks Apps Configuration
+# GSA MCP Server and SI Agent Government Hackathon
+# FDIC Deposit Insurance Model Context Protocol Server
+
+command:
+  - "python"
+  - "server.py"
+
+env:
+  - name: "PYTHONUNBUFFERED"
+    value: "1"
+  - name: "DATABRICKS_APP_PORT"
+    value: "8000"
