@@ -110,7 +110,7 @@ Returns official regulatory guidance, formulas, statutory citations, and common 
 ## 🧪 Local Testing & Parallel Verification with FDIC Deposit Insurance Calculator
 
 ### 1. Parallel Differential Testing (Deposit Insurance Calculator JS vs. Python MCP Server)
-The repository includes a parallel differential testing harness that downloads and runs the actual calculation algorithms from [`https://deposit_insurance_calculator.fdic.gov/javascript/deposit_insurance_calculator.js`](https://deposit_insurance_calculator.fdic.gov/javascript/deposit_insurance_calculator.js) via Node.js in parallel with the Python MCP Server, ensuring **100% mathematical parity**:
+The repository includes a parallel differential testing harness that downloads and runs the actual calculation algorithms from [`https://edie.fdic.gov/javascript/edie.js`](https://edie.fdic.gov/javascript/edie.js) via Node.js in parallel with the Python MCP Server, ensuring **100% mathematical parity**:
 
 ```bash
 # Run visual side-by-side comparison

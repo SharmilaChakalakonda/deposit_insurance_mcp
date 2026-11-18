@@ -27,7 +27,7 @@ On April 1, 2024, the FDIC enacted its biggest rule change in decades:
 * Most online calculators, estate articles, and financial tools are outdated and fail to reflect this cap.
 
 ### 3. Legacy Web Calculators & Manual Overhead
-* The official [FDIC Deposit Insurance Calculator Calculator](https://deposit_insurance_calculator.fdic.gov/) is a legacy web form requiring dozens of manual clicks per account.
+* The official [FDIC EDIE Calculator](https://edie.fdic.gov/) is a legacy web form requiring dozens of manual clicks per account.
 * Cannot evaluate multi-bank portfolios or corporate cash sweeps in bulk.
 * Closed to AI agents and automated financial platforms.
 
@@ -153,7 +153,7 @@ The submission includes three runnable demonstration flows:
 ```
 
 ### Evaluation Components:
-1. **Official Upstream JS Reference:** Extracted calculation logic directly from `https://deposit_insurance_calculator.fdic.gov/javascript/deposit_insurance_calculator.js`.
+1. **Official Upstream JS Reference:** Extracted calculation logic directly from `https://edie.fdic.gov/javascript/edie.js`.
 2. **Automated Differential Suite:** Pytest launches Node.js subprocesses to execute identical JSON account payloads on both engines and asserts zero numerical divergence.
 3. **Statutory Coverage Suite:** Verifies edge cases including sole proprietorship aggregations, cross-joint owner shares, in-state vs. out-of-state public unit pools, and 2024 trust beneficiary limits.
 
