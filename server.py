@@ -206,10 +206,24 @@ def get_insurance_rule_guidance(
 # FASTAPI APPLICATION & STREAMABLE HTTP MCP TRANSPORT
 # -----------------------------------------------------------------------------
 
-# Create the FastMCP Starlette/ASGI application using Streamable HTTP transport
-# stateless_http=True enables seamless compatibility with both stateful MCP clients
-# and direct HTTP JSON-RPC POST invocations.
-mcp_asgi_app = mcp.http_app(path="/", transport="streamable-http", stateless_http=True)
+# Create the FastMCP Starlette/ASGI application using Streamable HTTP transport.
+# stateless_http=True enables compatibility with both stateful MCP clients and
+# direct HTTP JSON-RPC POST invocations.
+#
+# host_origin_protection=False is required for Databricks Apps deployment:
+# Databricks routes all traffic through its own reverse proxy (driver-proxy /
+# Apps gateway), so the Host and Origin headers seen by the server contain the
+# Databricks workspace domain, NOT localhost.  FastMCP's default "auto" mode
+# would otherwise block or redirect those requests back to localhost, which is
+# the root cause of the localhost-redirect bug when tested with the MCP Inspector
+# inside Databricks.  Databricks Apps already handles authentication at the
+# platform level, so disabling FastMCP's host/origin guard here is safe.
+mcp_asgi_app = mcp.http_app(
+    path="/",
+    transport="streamable-http",
+    stateless_http=True,
+    host_origin_protection=False,  # Required for Databricks Apps reverse-proxy
+)
 
 # Main FastAPI application
 app = FastAPI(
