@@ -1,0 +1,100 @@
+﻿===========================================================================
+ PARALLEL TEST SUITE: FDIC EDIE CALCULATOR VS. MCP TOOL SERVER
+===========================================================================
+
+---------------------------------------------------------------------------
+ SCENARIO: 1. Single Individual Exceeding $250k SMDIA
+---------------------------------------------------------------------------
+2026-11-23 16:17:36,936 [INFO] fdic-mcp-server: Executing calculate_deposit_insurance with 2 account(s)
+Metric                    | EDIE Calculator (JS)   | MCP Server Tool (Py)   | Match?
+---------------------------------------------------------------------------
+Total Balance             | $350,000.00            | $350,000.00            | [MATCH]
+Total Insured             | $250,000.00            | $250,000.00            | [MATCH]
+Total Uninsured           | $100,000.00            | $100,000.00            | [MATCH]
+Coverage Percent          | 71.43%                 | 71.43%                 | [MATCH]
+
+  --> Account Allocation Parity:
+      [CHK-01] Balance: $180,000.00 -> Insured: $128,571.43 | Uninsured: $51,428.57 [MATCH]
+      [SAV-02] Balance: $170,000.00 -> Insured: $121,428.57 | Uninsured: $48,571.43 [MATCH]
+
+---------------------------------------------------------------------------
+ SCENARIO: 2. Joint Accounts with 2 Co-Owners ($500k Limit)
+---------------------------------------------------------------------------
+2026-11-23 16:17:37,008 [INFO] fdic-mcp-server: Executing calculate_deposit_insurance with 1 account(s)
+Metric                    | EDIE Calculator (JS)   | MCP Server Tool (Py)   | Match?
+---------------------------------------------------------------------------
+Total Balance             | $650,000.00            | $650,000.00            | [MATCH]
+Total Insured             | $500,000.00            | $500,000.00            | [MATCH]
+Total Uninsured           | $150,000.00            | $150,000.00            | [MATCH]
+Coverage Percent          | 76.92%                 | 76.92%                 | [MATCH]
+
+  --> Account Allocation Parity:
+      [JNT-01] Balance: $650,000.00 -> Insured: $500,000.00 | Uninsured: $150,000.00 [MATCH]
+
+---------------------------------------------------------------------------
+ SCENARIO: 3. Revocable Trust with Beneficiary Cap (2024 Rule: 7 Beneficiaries Capped at 5)
+---------------------------------------------------------------------------
+2026-11-23 16:17:37,081 [INFO] fdic-mcp-server: Executing calculate_deposit_insurance with 1 account(s)
+Metric                    | EDIE Calculator (JS)   | MCP Server Tool (Py)   | Match?
+---------------------------------------------------------------------------
+Total Balance             | $1,600,000.00          | $1,600,000.00          | [MATCH]
+Total Insured             | $1,250,000.00          | $1,250,000.00          | [MATCH]
+Total Uninsured           | $350,000.00            | $350,000.00            | [MATCH]
+Coverage Percent          | 78.13%                 | 78.13%                 | [MATCH]
+
+  --> Account Allocation Parity:
+      [TRST-01] Balance: $1,600,000.00 -> Insured: $1,250,000.00 | Uninsured: $350,000.00 [MATCH]
+
+---------------------------------------------------------------------------
+ SCENARIO: 4. Business Accounts (LLC Operating & Payroll Aggregated)
+---------------------------------------------------------------------------
+2026-11-23 16:17:37,154 [INFO] fdic-mcp-server: Executing calculate_deposit_insurance with 2 account(s)
+Metric                    | EDIE Calculator (JS)   | MCP Server Tool (Py)   | Match?
+---------------------------------------------------------------------------
+Total Balance             | $350,000.00            | $350,000.00            | [MATCH]
+Total Insured             | $250,000.00            | $250,000.00            | [MATCH]
+Total Uninsured           | $100,000.00            | $100,000.00            | [MATCH]
+Coverage Percent          | 71.43%                 | 71.43%                 | [MATCH]
+
+  --> Account Allocation Parity:
+      [BIZ-01] Balance: $200,000.00 -> Insured: $142,857.14 | Uninsured: $57,142.86 [MATCH]
+      [BIZ-02] Balance: $150,000.00 -> Insured: $107,142.86 | Uninsured: $42,857.14 [MATCH]
+
+---------------------------------------------------------------------------
+ SCENARIO: 5. Government In-State Dual Pools (Demand Checking vs. Time/CD)
+---------------------------------------------------------------------------
+2026-11-23 16:17:37,227 [INFO] fdic-mcp-server: Executing calculate_deposit_insurance with 2 account(s)
+Metric                    | EDIE Calculator (JS)   | MCP Server Tool (Py)   | Match?
+---------------------------------------------------------------------------
+Total Balance             | $550,000.00            | $550,000.00            | [MATCH]
+Total Insured             | $450,000.00            | $450,000.00            | [MATCH]
+Total Uninsured           | $100,000.00            | $100,000.00            | [MATCH]
+Coverage Percent          | 81.82%                 | 81.82%                 | [MATCH]
+
+  --> Account Allocation Parity:
+      [GOV-01] Balance: $350,000.00 -> Insured: $250,000.00 | Uninsured: $100,000.00 [MATCH]
+      [GOV-02] Balance: $200,000.00 -> Insured: $200,000.00 | Uninsured: $0.00 [MATCH]
+
+---------------------------------------------------------------------------
+ SCENARIO: 6. Complex Multi-Category Enterprise Portfolio
+---------------------------------------------------------------------------
+2026-11-23 16:17:37,301 [INFO] fdic-mcp-server: Executing calculate_deposit_insurance with 6 account(s)
+Metric                    | EDIE Calculator (JS)   | MCP Server Tool (Py)   | Match?
+---------------------------------------------------------------------------
+Total Balance             | $3,150,000.00          | $3,150,000.00          | [MATCH]
+Total Insured             | $2,870,000.00          | $2,870,000.00          | [MATCH]
+Total Uninsured           | $280,000.00            | $280,000.00            | [MATCH]
+Coverage Percent          | 91.11%                 | 91.11%                 | [MATCH]
+
+  --> Account Allocation Parity:
+      [ACC-S] Balance: $220,000.00 -> Insured: $220,000.00 | Uninsured: $0.00 [MATCH]
+      [ACC-J] Balance: $550,000.00 -> Insured: $500,000.00 | Uninsured: $50,000.00 [MATCH]
+      [ACC-T] Balance: $1,400,000.00 -> Insured: $1,400,000.00 | Uninsured: $0.00 [MATCH]
+      [ACC-B] Balance: $300,000.00 -> Insured: $250,000.00 | Uninsured: $50,000.00 [MATCH]
+      [ACC-G] Balance: $400,000.00 -> Insured: $250,000.00 | Uninsured: $150,000.00 [MATCH]
+      [ACC-R] Balance: $280,000.00 -> Insured: $250,000.00 | Uninsured: $30,000.00 [MATCH]
+
+===========================================================================
+ PARALLEL AUDIT RESULT: 6/6 SCENARIOS FULLY VERIFIED
+ VERDICT: 100% MATHEMATICAL PARITY CONFIRMED WITH FDIC EDIE CALCULATOR!
+===========================================================================

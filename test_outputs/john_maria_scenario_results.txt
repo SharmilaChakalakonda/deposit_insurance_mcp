@@ -1,0 +1,97 @@
+﻿******************************************************************************
+ FDIC DEPOSIT INSURANCE AUDIT: JOHN AND MARIA JOHNSON CASE STUDY
+******************************************************************************
+
+==============================================================================
+ CASE 1: CURRENT STATUS (WITHIN 6-MONTH GRACE PERIOD) - $1,000,000 NEW DEPOSIT
+==============================================================================
+2026-11-23 16:17:58,295 [INFO] fdic-mcp-server: Executing calculate_deposit_insurance with 3 account(s)
+Total Balance:   $1,498,000.00  | EDIE JS: $1,498,000.00  [MATCH]
+Total Insured:   $1,498,000.00  | EDIE JS: $1,498,000.00  [MATCH]
+Total Uninsured: $0.00  | EDIE JS: $0.00  [MATCH]
+Coverage Ratio:  100.0%  | EDIE JS: 100%  [MATCH]
+
+Account Details (Python MCP Server):
+  * [ACC-01] John Johnson POD Maria Johnson
+      Balance: $249,000.00 | Insured: $249,000.00 | Uninsured: $0.00 (Fully Insured)
+      Notes: Grantor(s): John Johnson: $249,000.00 (insured $249,000.00). Beneficiaries: Maria Johnson (12 CFR § 330.10).
+  * [ACC-02] Maria Johnson POD John Johnson
+      Balance: $249,000.00 | Insured: $249,000.00 | Uninsured: $0.00 (Fully Insured)
+      Notes: Grantor(s): Maria Johnson: $249,000.00 (insured $249,000.00). Beneficiaries: John Johnson (12 CFR § 330.10).
+  * [ACC-03] Johnson Family Trust Account
+      Balance: $1,000,000.00 | Insured: $1,000,000.00 | Uninsured: $0.00 (Fully Insured)
+      Notes: Grantor(s): John Johnson: $500,000.00 (insured $500,000.00), Maria Johnson: $500,000.00 (insured $500,000.00). Beneficiaries: Alexander Johnson, Samuel Johnson (12 CFR § 330.10).
+
+Recommendations:
+  -> All deposited funds are 100% fully insured under current FDIC ownership structures and limits.
+
+==============================================================================
+ CASE 2: WITHIN GRACE PERIOD WITH EXCESS DEPOSIT ($1,500,000 NEW DEPOSIT)
+==============================================================================
+2026-11-23 16:17:58,370 [INFO] fdic-mcp-server: Executing calculate_deposit_insurance with 3 account(s)
+Total Balance:   $1,998,000.00  | EDIE JS: $1,998,000.00  [MATCH]
+Total Insured:   $1,500,000.01  | EDIE JS: $1,500,000.01  [MATCH]
+Total Uninsured: $497,999.99  | EDIE JS: $497,999.99  [MATCH]
+Coverage Ratio:  75.08%  | EDIE JS: 75.08%  [MATCH]
+
+Account Details (Python MCP Server):
+  * [ACC-01] John Johnson POD Maria Johnson
+      Balance: $249,000.00 | Insured: $186,936.94 | Uninsured: $62,063.06 (Partially Insured)
+      Notes: Grantor(s): John Johnson: $249,000.00 (insured $186,936.94). Beneficiaries: Maria Johnson (12 CFR § 330.10).
+  * [ACC-02] Maria Johnson POD John Johnson
+      Balance: $249,000.00 | Insured: $186,936.94 | Uninsured: $62,063.06 (Partially Insured)
+      Notes: Grantor(s): Maria Johnson: $249,000.00 (insured $186,936.94). Beneficiaries: John Johnson (12 CFR § 330.10).
+  * [ACC-03] Johnson Family Trust Account
+      Balance: $1,500,000.00 | Insured: $1,126,126.13 | Uninsured: $373,873.87 (Partially Insured)
+      Notes: Grantor(s): John Johnson: $750,000.00 (insured $563,063.06), Maria Johnson: $750,000.00 (insured $563,063.06). Beneficiaries: Alexander Johnson, Samuel Johnson (12 CFR § 330.10).
+
+Recommendations:
+  -> Grantor 'John Johnson' has $249,000.00 in excess trust deposits at 'Primary FDIC-Insured Institution'. Under 12 CFR § 330.10, all trust accounts for a grantor are aggregated and capped at 5 eligible beneficiaries ($750,000.00 limit). To obtain full coverage, consider depositing excess funds into a separate FDIC-insured institution.
+  -> Grantor 'Maria Johnson' has $249,000.00 in excess trust deposits at 'Primary FDIC-Insured Institution'. Under 12 CFR § 330.10, all trust accounts for a grantor are aggregated and capped at 5 eligible beneficiaries ($750,000.00 limit). To obtain full coverage, consider depositing excess funds into a separate FDIC-insured institution.
+
+==============================================================================
+ CASE 3: POST-GRACE PERIOD (ALEXANDER IS SOLE BENEFICIARY) - $1,000,000 DEPOSIT
+==============================================================================
+2026-11-23 16:17:58,445 [INFO] fdic-mcp-server: Executing calculate_deposit_insurance with 3 account(s)
+Total Balance:   $1,498,000.00  | EDIE JS: $1,498,000.00  [MATCH]
+Total Insured:   $1,000,000.00  | EDIE JS: $1,000,000.00  [MATCH]
+Total Uninsured: $498,000.00  | EDIE JS: $498,000.00  [MATCH]
+Coverage Ratio:  66.76%  | EDIE JS: 66.76%  [MATCH]
+
+Account Details (Python MCP Server):
+  * [ACC-01] John Johnson POD Maria Johnson
+      Balance: $249,000.00 | Insured: $166,221.63 | Uninsured: $82,778.37 (Partially Insured)
+      Notes: Grantor(s): John Johnson: $249,000.00 (insured $166,221.63). Beneficiaries: Maria Johnson (12 CFR § 330.10).
+  * [ACC-02] Maria Johnson POD John Johnson
+      Balance: $249,000.00 | Insured: $166,221.63 | Uninsured: $82,778.37 (Partially Insured)
+      Notes: Grantor(s): Maria Johnson: $249,000.00 (insured $166,221.63). Beneficiaries: John Johnson (12 CFR § 330.10).
+  * [ACC-03] Johnson Family Trust Account
+      Balance: $1,000,000.00 | Insured: $667,556.74 | Uninsured: $332,443.26 (Partially Insured)
+      Notes: Grantor(s): John Johnson: $500,000.00 (insured $333,778.37), Maria Johnson: $500,000.00 (insured $333,778.37). Beneficiaries: Alexander Johnson (12 CFR § 330.10).
+
+Recommendations:
+  -> Grantor 'John Johnson' has $249,000.00 in excess trust deposits at 'Primary FDIC-Insured Institution'. Under 12 CFR § 330.10, all trust accounts for a grantor are aggregated and capped at 5 eligible beneficiaries ($500,000.00 limit). To obtain full coverage, consider depositing excess funds into a separate FDIC-insured institution.
+  -> Grantor 'Maria Johnson' has $249,000.00 in excess trust deposits at 'Primary FDIC-Insured Institution'. Under 12 CFR § 330.10, all trust accounts for a grantor are aggregated and capped at 5 eligible beneficiaries ($500,000.00 limit). To obtain full coverage, consider depositing excess funds into a separate FDIC-insured institution.
+
+==============================================================================
+ CASE 4: POST-GRACE PERIOD WITH GRANDCHILDREN AS PER STIRPES BENEFICIARIES
+==============================================================================
+2026-11-23 16:17:58,520 [INFO] fdic-mcp-server: Executing calculate_deposit_insurance with 3 account(s)
+Total Balance:   $1,498,000.00  | EDIE JS: $1,498,000.00  [MATCH]
+Total Insured:   $1,498,000.00  | EDIE JS: $1,498,000.00  [MATCH]
+Total Uninsured: $0.00  | EDIE JS: $0.00  [MATCH]
+Coverage Ratio:  100.0%  | EDIE JS: 100%  [MATCH]
+
+Account Details (Python MCP Server):
+  * [ACC-01] John Johnson POD Maria Johnson
+      Balance: $249,000.00 | Insured: $249,000.00 | Uninsured: $0.00 (Fully Insured)
+      Notes: Grantor(s): John Johnson: $249,000.00 (insured $249,000.00). Beneficiaries: Maria Johnson (12 CFR § 330.10).
+  * [ACC-02] Maria Johnson POD John Johnson
+      Balance: $249,000.00 | Insured: $249,000.00 | Uninsured: $0.00 (Fully Insured)
+      Notes: Grantor(s): Maria Johnson: $249,000.00 (insured $249,000.00). Beneficiaries: John Johnson (12 CFR § 330.10).
+  * [ACC-03] Johnson Family Trust Account
+      Balance: $1,000,000.00 | Insured: $1,000,000.00 | Uninsured: $0.00 (Fully Insured)
+      Notes: Grantor(s): John Johnson: $500,000.00 (insured $500,000.00), Maria Johnson: $500,000.00 (insured $500,000.00). Beneficiaries: Alexander Johnson, Charles Johnson, Cindy Johnson (12 CFR § 330.10).
+
+Recommendations:
+  -> All deposited funds are 100% fully insured under current FDIC ownership structures and limits.

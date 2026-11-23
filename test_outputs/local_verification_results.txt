@@ -1,0 +1,46 @@
+﻿
+======================================================================
+ FDIC DEPOSIT INSURANCE MCP SERVER - LOCAL VERIFICATION
+======================================================================
+2026-11-23 16:17:48,340 [INFO] mcp.server.streamable_http_manager: StreamableHTTP session manager started
+
+[Step 1/5] Testing Health Check Endpoint (/health)...
+2026-11-23 16:17:48,344 [INFO] httpx2: HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+  --> Status: HEALTHY
+  --> Service: fdic-deposit-insurance-mcp
+  --> Port: 8000
+  --> Tools Loaded: calculate_deposit_insurance, get_insurance_rule_guidance
+
+[Step 2/5] Testing Root Discovery Endpoint (/)...
+2026-11-23 16:17:48,348 [INFO] httpx2: HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+  --> Service: FDIC Deposit Insurance MCP Server
+  --> Regulatory Compliance: 12 CFR Part 330, FDIC Financial Institution Employee's Guide to Deposit Insurance, FDIC 2024 Trust Rule Simplification...
+  --> MCP Path: /mcp
+
+[Step 3/5] Testing REST Calculation API (/api/calculate)...
+2026-11-23 16:17:48,352 [INFO] httpx2: HTTP Request: POST http://testserver/api/calculate "HTTP/1.1 200 OK"
+  --> Total Portfolio Balance: $3,150,000.00
+  --> Total Insured:           $2,750,000.00
+  --> Total Uninsured:         $400,000.00
+  --> Insurance Coverage:      87.3%
+  --> Fully Insured:           False
+
+[Step 4/5] Testing MCP Streamable HTTP Transport (/mcp/ -> tools/list)...
+2026-11-23 16:17:48,356 [INFO] httpx2: HTTP Request: POST http://testserver/mcp/ "HTTP/1.1 200 OK"
+2026-11-23 16:17:49,244 [INFO] mcp.server.streamable_http: Terminating session: None
+  --> MCP Streamable HTTP Protocol Handshake: SUCCESS (HTTP 200)
+  --> Discovered Tools: calculate_deposit_insurance, get_insurance_rule_guidance
+
+[Step 5/5] Invoking calculate_deposit_insurance via MCP JSON-RPC Protocol...
+2026-11-23 16:17:49,250 [INFO] httpx2: HTTP Request: POST http://testserver/mcp/ "HTTP/1.1 200 OK"
+2026-11-23 16:17:49,253 [INFO] fdic-mcp-server: Executing calculate_deposit_insurance with 1 account(s)
+2026-11-23 16:17:49,259 [INFO] mcp.server.streamable_http: Terminating session: None
+  --> MCP Tool Call: SUCCESS
+  --> 2024 FDIC Trust Rule Verification:
+      Grantor Alice has 7 beneficiaries, capped at 5 ($1,250,000 maximum).
+      Result correctly reports $1,250,000 Insured, $250,000 Uninsured.
+
+======================================================================
+ ALL LOCAL INTEGRATION TESTS COMPLETED SUCCESSFULLY (100% PASS)
+======================================================================
+2026-11-23 16:17:49,260 [INFO] mcp.server.streamable_http_manager: StreamableHTTP session manager shutting down
