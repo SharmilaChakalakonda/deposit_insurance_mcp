@@ -10,8 +10,9 @@ Validates:
 
 import json
 import pytest
+from pydantic import ValidationError
 from starlette.testclient import TestClient
-from server import app
+from server import app, calculate_deposit_insurance, get_insurance_rule_guidance
 from deposit_insurance_engine import (
     AccountCategory,
     AccountInput,
@@ -363,3 +364,161 @@ def test_mcp_guidance_tool_invocation(client):
     r = client.post("/mcp/", json=payload, headers={"accept": "application/json, text/event-stream"})
     assert r.status_code == 200
     assert "12 CFR § 330.15" in r.text
+
+
+# =====================================================================
+# 10. EDGE CASES, VALIDATION, AND ADDITIONAL COMPREHENSIVE TESTS
+# =====================================================================
+def test_empty_accounts_portfolio():
+    """Verify empty accounts portfolio returns zero balances and safe defaults."""
+    res = calculate_portfolio_insurance([])
+    assert res.summary.total_balance == 0.0
+    assert res.summary.total_insured == 0.0
+    assert res.summary.total_uninsured == 0.0
+    assert res.summary.percent_insured == 100.0
+    assert res.summary.is_fully_insured is True
+    assert res.summary.accounts_count == 0
+    assert len(res.actionable_recommendations) > 0
+
+
+def test_zero_balance_account():
+    """Verify $0.00 balance account is handled gracefully without division by zero."""
+    acc = AccountInput(account_id="Z-1", category=AccountCategory.SINGLE, balance=0.0, owners=["Alice"])
+    res = calculate_portfolio_insurance([acc])
+    assert res.summary.total_balance == 0.0
+    assert res.summary.total_insured == 0.0
+    assert res.summary.total_uninsured == 0.0
+    assert res.summary.is_fully_insured is True
+
+
+def test_joint_custom_shares_percentage():
+    """Verify joint account with custom percentage allocations (70% / 30%)."""
+    acc = AccountInput(
+        account_id="J-CP",
+        category=AccountCategory.JOINT,
+        balance=500000.0,
+        owners=["Alice", "Bob"],
+        custom_owner_shares={"Alice": 0.7, "Bob": 0.3}
+    )
+    res = calculate_portfolio_insurance([acc])
+    # Alice share = $350k ($250k insured, $100k uninsured). Bob share = $150k (100% insured).
+    assert res.summary.total_balance == 500000.0
+    assert res.summary.total_insured == 400000.0
+    assert res.summary.total_uninsured == 100000.0
+    assert res.summary.is_fully_insured is False
+
+
+def test_joint_custom_shares_dollar():
+    """Verify joint account with custom dollar share allocations ($300k / $100k)."""
+    acc = AccountInput(
+        account_id="J-CD",
+        category=AccountCategory.JOINT,
+        balance=400000.0,
+        owners=["Alice", "Bob"],
+        custom_owner_shares={"Alice": 300000.0, "Bob": 100000.0}
+    )
+    res = calculate_portfolio_insurance([acc])
+    # Alice has $300k interest ($250k insured, $50k uninsured). Bob has $100k interest ($100k insured).
+    assert res.summary.total_balance == 400000.0
+    assert res.summary.total_insured == 350000.0
+    assert res.summary.total_uninsured == 50000.0
+
+
+def test_retirement_over_limit():
+    """Verify retirement accounts aggregating > $250k properly cap coverage."""
+    ira_trad = AccountInput(account_id="R-TRAD", category=AccountCategory.RETIREMENT, balance=180000.0, owners=["Charlie"])
+    ira_roth = AccountInput(account_id="R-ROTH", category=AccountCategory.RETIREMENT, balance=140000.0, owners=["Charlie"])
+    res = calculate_portfolio_insurance([ira_trad, ira_roth])
+    assert res.summary.total_balance == 320000.0
+    assert res.summary.total_insured == 250000.0
+    assert res.summary.total_uninsured == 70000.0
+    assert res.summary.is_fully_insured is False
+
+
+def test_multiple_trust_accounts_aggregated_grantor():
+    """Verify same grantor with multiple trust accounts and overlapping beneficiaries."""
+    # Alice has Trust 1 ($600k, B1, B2) and Trust 2 ($400k, B2, B3) at same bank.
+    # Total unique beneficiaries = 3 -> Total coverage limit = 3 * $250k = $750k.
+    # Total balance = $1,000,000 -> Insured = $750,000, Uninsured = $250,000.
+    t1 = AccountInput(account_id="T-A", category=AccountCategory.TRUST, balance=600000.0, owners=["Alice"], beneficiaries=["Child 1", "Child 2"])
+    t2 = AccountInput(account_id="T-B", category=AccountCategory.TRUST, balance=400000.0, owners=["Alice"], beneficiaries=["Child 2", "Child 3"])
+    res = calculate_portfolio_insurance([t1, t2])
+    assert res.summary.total_balance == 1000000.0
+    assert res.summary.total_insured == 750000.0
+    assert res.summary.total_uninsured == 250000.0
+
+
+def test_pydantic_validation_negative_balance():
+    """Verify that negative account balance raises validation error."""
+    with pytest.raises(ValidationError):
+        AccountInput(account_id="NEG-1", category=AccountCategory.SINGLE, balance=-100.0, owners=["Alice"])
+
+
+def test_pydantic_validation_missing_required_fields():
+    """Verify that missing account_id raises validation error."""
+    with pytest.raises(ValidationError):
+        AccountInput(category=AccountCategory.SINGLE, balance=100.0)
+
+
+def test_fastapi_calculate_empty_portfolio(client):
+    """Verify FastAPI /api/calculate handles empty list payload gracefully."""
+    r = client.post("/api/calculate", json=[])
+    assert r.status_code == 200
+    data = r.json()
+    assert data["summary"]["total_balance"] == 0.0
+    assert data["summary"]["total_insured"] == 0.0
+    assert data["summary"]["is_fully_insured"] is True
+
+
+def test_fastapi_calculate_validation_error(client):
+    """Verify FastAPI /api/calculate returns 422 on negative balance."""
+    payload = [{"account_id": "ERR-1", "category": "single", "balance": -5000.0, "owners": ["Alice"]}]
+    r = client.post("/api/calculate", json=payload)
+    assert r.status_code == 422
+
+
+def test_fastapi_guidance_all_categories(client):
+    """Verify FastAPI /api/guidance without params returns overview and category listing."""
+    r = client.get("/api/guidance")
+    assert r.status_code == 200
+    data = r.json()
+    assert "available_categories" in data
+    assert "single" in data["available_categories"]
+    assert "trust" in data["available_categories"]
+
+
+def test_fastapi_guidance_grace_period_topic(client):
+    """Verify FastAPI /api/guidance with topic='death' returns 6-month grace period rules."""
+    r = client.get("/api/guidance?topic=death")
+    assert r.status_code == 200
+    data = r.json()
+    assert "death_grace_period" in data
+    assert "6-month grace period" in data["death_grace_period"]
+
+
+def test_fastapi_guidance_uninsured_crypto_topic(client):
+    """Verify FastAPI /api/guidance with topic='crypto' returns non-deposit disclosures."""
+    r = client.get("/api/guidance?topic=crypto")
+    assert r.status_code == 200
+    data = r.json()
+    assert "uninsured_investments" in data
+
+
+def test_mcp_calculate_tool_dict_input():
+    """Verify calculate_deposit_insurance accepts a single dict and wraps it properly."""
+    res = calculate_deposit_insurance(
+        {"account_id": "DICT-1", "category": "single", "balance": 120000.0, "owners": ["Alice"]}
+    )
+    assert res["summary"]["total_balance"] == 120000.0
+    assert res["summary"]["total_insured"] == 120000.0
+    assert res["summary"]["is_fully_insured"] is True
+
+
+def test_mcp_calculate_tool_validation_error_handling():
+    """Verify calculate_deposit_insurance catches validation errors and returns structured error dict."""
+    res = calculate_deposit_insurance(
+        [{"account_id": "BAD-1", "category": "single", "balance": -999.0, "owners": ["Alice"]}]
+    )
+    assert "error" in res
+    assert res["error"] == "Account Data Validation Error"
+    assert "details" in res

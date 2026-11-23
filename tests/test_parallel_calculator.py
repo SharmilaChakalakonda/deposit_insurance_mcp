@@ -225,3 +225,71 @@ def test_parallel_complex_multi_category_portfolio():
         {"account_id": "A8", "category": "retirement", "balance": 280000.0, "owners": ["David Lee"]}
     ]
     assert_parallel_parity(portfolio)
+
+
+def test_parallel_empty_portfolio():
+    """Scenario 15: Edge case empty portfolio (0 accounts)."""
+    assert_parallel_parity([])
+
+
+def test_parallel_zero_balance_account():
+    """Scenario 16: Zero balance single deposit account ($0.00)."""
+    portfolio = [
+        {"account_id": "Z1", "category": "single", "balance": 0.0, "owners": ["Alice"]}
+    ]
+    assert_parallel_parity(portfolio)
+
+
+def test_parallel_multi_bank_separation():
+    """Scenario 17: Multi-bank separation ensuring independent $250k limits per IDI."""
+    portfolio = [
+        {"account_id": "MB1", "category": "single", "balance": 300000.0, "owners": ["Alice"], "bank_name": "Bank Alpha"},
+        {"account_id": "MB2", "category": "single", "balance": 300000.0, "owners": ["Alice"], "bank_name": "Bank Beta"}
+    ]
+    assert_parallel_parity(portfolio)
+
+
+def test_parallel_joint_custom_percentages():
+    """Scenario 18: Joint account with custom ownership percentage split (70% / 30%)."""
+    portfolio = [
+        {
+            "account_id": "J-CP",
+            "category": "joint",
+            "balance": 500000.0,
+            "owners": ["Alice", "Bob"],
+            "custom_owner_shares": {"Alice": 0.7, "Bob": 0.3}
+        }
+    ]
+    assert_parallel_parity(portfolio)
+
+
+def test_parallel_joint_custom_dollar_amounts():
+    """Scenario 19: Joint account with explicit dollar share allocations."""
+    portfolio = [
+        {
+            "account_id": "J-CD",
+            "category": "joint",
+            "balance": 400000.0,
+            "owners": ["Alice", "Bob"],
+            "custom_owner_shares": {"Alice": 300000.0, "Bob": 100000.0}
+        }
+    ]
+    assert_parallel_parity(portfolio)
+
+
+def test_parallel_retirement_over_limit():
+    """Scenario 20: Aggregated retirement accounts exceeding the $250k participant limit."""
+    portfolio = [
+        {"account_id": "R-1", "category": "retirement", "balance": 180000.0, "owners": ["Charlie"]},
+        {"account_id": "R-2", "category": "retirement", "balance": 140000.0, "owners": ["Charlie"]}
+    ]
+    assert_parallel_parity(portfolio)
+
+
+def test_parallel_multi_trust_overlapping_beneficiaries():
+    """Scenario 21: Multiple trusts by same grantor with overlapping beneficiaries across accounts."""
+    portfolio = [
+        {"account_id": "T-A", "category": "trust", "balance": 600000.0, "owners": ["Alice"], "beneficiaries": ["Child 1", "Child 2"]},
+        {"account_id": "T-B", "category": "trust", "balance": 400000.0, "owners": ["Alice"], "beneficiaries": ["Child 2", "Child 3"]}
+    ]
+    assert_parallel_parity(portfolio)

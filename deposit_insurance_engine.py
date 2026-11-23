@@ -365,10 +365,11 @@ def calculate_portfolio_insurance(
                 norm_owners = [o.strip().title() for o in acc.owners]
                 account_owner_shares[acc.account_id] = {}
                 n_owners = len(norm_owners)
+                norm_custom_shares = {k.strip().title(): v for k, v in acc.custom_owner_shares.items()} if acc.custom_owner_shares else {}
 
                 for owner in norm_owners:
-                    if acc.custom_owner_shares and owner in acc.custom_owner_shares:
-                        share_val = acc.custom_owner_shares[owner]
+                    if norm_custom_shares and owner in norm_custom_shares:
+                        share_val = norm_custom_shares[owner]
                         # Check if share is fraction or dollar amount
                         if share_val <= 1.0:
                             share_amount = acc.balance * share_val
@@ -953,61 +954,62 @@ def get_rule_guidance(category: Optional[str] = None, topic: Optional[str] = Non
     if cat_clean in FDIC_GUIDANCE_DB:
         return FDIC_GUIDANCE_DB[cat_clean]
 
-    # Search by topic
-    for key, data in FDIC_GUIDANCE_DB.items():
-        if key in topic_clean or topic_clean in key:
-            return data
+    # Search by topic if topic provided
+    if topic_clean:
+        for key, data in FDIC_GUIDANCE_DB.items():
+            if key in topic_clean or topic_clean in key:
+                return data
 
-    if "trust" in topic_clean or "beneficiar" in topic_clean or "pod" in topic_clean:
-        return FDIC_GUIDANCE_DB["trust"]
-    if "joint" in topic_clean or "survivor" in topic_clean:
-        return FDIC_GUIDANCE_DB["joint"]
-    if "gov" in topic_clean or "custodian" in topic_clean or "public unit" in topic_clean:
-        return FDIC_GUIDANCE_DB["government"]
-    if "business" in topic_clean or "llc" in topic_clean or "corp" in topic_clean:
-        return FDIC_GUIDANCE_DB["business"]
-    if "ira" in topic_clean or "retire" in topic_clean:
-        return FDIC_GUIDANCE_DB["retirement"]
-    if "sole" in topic_clean or "single" in topic_clean:
-        return FDIC_GUIDANCE_DB["single"]
+        if "trust" in topic_clean or "beneficiar" in topic_clean or "pod" in topic_clean:
+            return FDIC_GUIDANCE_DB["trust"]
+        if "joint" in topic_clean or "survivor" in topic_clean:
+            return FDIC_GUIDANCE_DB["joint"]
+        if "gov" in topic_clean or "custodian" in topic_clean or "public unit" in topic_clean:
+            return FDIC_GUIDANCE_DB["government"]
+        if "business" in topic_clean or "llc" in topic_clean or "corp" in topic_clean:
+            return FDIC_GUIDANCE_DB["business"]
+        if "ira" in topic_clean or "retire" in topic_clean:
+            return FDIC_GUIDANCE_DB["retirement"]
+        if "sole" in topic_clean or "single" in topic_clean:
+            return FDIC_GUIDANCE_DB["single"]
 
-    # Special topic guidance
-    if "grace" in topic_clean or "death" in topic_clean or "merger" in topic_clean:
-        return {
-            "topic": "FDIC Grace Periods (Death of Depositor and Bank Mergers)",
-            "statutory_authority": "12 CFR § 330.3; 12 CFR § 330.4",
-            "death_grace_period": (
-                "Following the death of an account owner, the FDIC provides a 6-month grace period during which "
-                "deposit insurance coverage remains unchanged as if the deceased owner were still alive. "
-                "This allows beneficiaries and executors time to restructure accounts without loss of coverage."
-            ),
-            "merger_grace_period": (
-                "When two FDIC-insured banks merge, deposits previously held at each bank continue to be separately "
-                "insured for a 6-month grace period. Certificates of Deposit (CDs) are separately insured until the "
-                "earliest maturity date following the 6-month period."
-            )
-        }
+        # Special topic guidance
+        if "grace" in topic_clean or "death" in topic_clean or "merger" in topic_clean:
+            return {
+                "topic": "FDIC Grace Periods (Death of Depositor and Bank Mergers)",
+                "statutory_authority": "12 CFR § 330.3; 12 CFR § 330.4",
+                "death_grace_period": (
+                    "Following the death of an account owner, the FDIC provides a 6-month grace period during which "
+                    "deposit insurance coverage remains unchanged as if the deceased owner were still alive. "
+                    "This allows beneficiaries and executors time to restructure accounts without loss of coverage."
+                ),
+                "merger_grace_period": (
+                    "When two FDIC-insured banks merge, deposits previously held at each bank continue to be separately "
+                    "insured for a 6-month grace period. Certificates of Deposit (CDs) are separately insured until the "
+                    "earliest maturity date following the 6-month period."
+                )
+            }
 
-    if "uninsured" in topic_clean or "non-deposit" in topic_clean or "crypto" in topic_clean or "stock" in topic_clean:
-        return {
-            "topic": "Non-Deposit Products Not Insured by FDIC",
-            "statutory_authority": "Federal Deposit Insurance Act § 3(l); 12 CFR § 330.1",
-            "uninsured_investments": [
-                "Mutual funds, exchange-traded funds (ETFs), and index funds.",
-                "Stocks, corporate bonds, municipal bonds, and treasury securities purchased through brokerage services.",
-                "Annuities, life insurance policies, and casualty insurance.",
-                "Cryptocurrencies, digital assets, and virtual tokens.",
-                "Contents of safe deposit boxes (physical property is not a bank deposit)."
-            ],
-            "fdic_insured_products": [
-                "Checking accounts (Demand Deposit Accounts).",
-                "Negotiable Order of Withdrawal (NOW) accounts.",
-                "Savings accounts.",
-                "Money Market Deposit Accounts (MMDAs).",
-                "Certificates of Deposit (CDs) and time deposits.",
-                "Official bank checks, cashier's checks, and money orders issued by the bank."
-            ]
-        }
+        if "uninsured" in topic_clean or "non-deposit" in topic_clean or "crypto" in topic_clean or "stock" in topic_clean:
+            return {
+                "topic": "Non-Deposit Products Not Insured by FDIC",
+                "statutory_authority": "Federal Deposit Insurance Act § 3(l); 12 CFR § 330.1",
+                "uninsured_investments": [
+                    "Mutual funds, exchange-traded funds (ETFs), and index funds.",
+                    "Stocks, corporate bonds, municipal bonds, and treasury securities purchased through brokerage services.",
+                    "Annuities, life insurance policies, and casualty insurance.",
+                    "Cryptocurrencies, digital assets, and virtual tokens.",
+                    "Contents of safe deposit boxes (physical property is not a bank deposit)."
+                ],
+                "fdic_insured_products": [
+                    "Checking accounts (Demand Deposit Accounts).",
+                    "Negotiable Order of Withdrawal (NOW) accounts.",
+                    "Savings accounts.",
+                    "Money Market Deposit Accounts (MMDAs).",
+                    "Certificates of Deposit (CDs) and time deposits.",
+                    "Official bank checks, cashier's checks, and money orders issued by the bank."
+                ]
+            }
 
     # Default overview
     return {

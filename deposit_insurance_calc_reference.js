@@ -96,11 +96,17 @@ function calculateEDIE(accounts) {
                 const owners = (acc.owners && acc.owners.length > 0) ? acc.owners.map(o => o.toLowerCase().trim()) : ["owner1", "owner2"];
                 accShareMap[acc.account_id] = {};
                 const numOwners = owners.length;
+                const normCustomShares = {};
+                if (acc.custom_owner_shares) {
+                    for (const k in acc.custom_owner_shares) {
+                        normCustomShares[k.toLowerCase().trim()] = acc.custom_owner_shares[k];
+                    }
+                }
 
                 for (const owner of owners) {
                     let share = 0;
-                    if (acc.custom_owner_shares && acc.custom_owner_shares[owner] !== undefined) {
-                        const val = acc.custom_owner_shares[owner];
+                    if (normCustomShares[owner] !== undefined) {
+                        const val = normCustomShares[owner];
                         share = val <= 1.0 ? acc.balance * val : val;
                     } else {
                         share = acc.balance / numOwners;

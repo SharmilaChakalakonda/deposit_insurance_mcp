@@ -139,7 +139,7 @@ The repository includes a parallel differential testing harness that downloads a
 python parallel_test_runner.py
 
 # Run automated differential test suite
-python -m pytest -v tests/test_parallel_calculator.py
+python -m pytest -v tests/test_parallel_calculator.py # 21 tests
 ```
 
 ### 2. Full Regression Test Suite (37 Tests)
