@@ -15,6 +15,28 @@ Built for the **GSA MCP Server and SI Agent Government Hackathon** and optimized
 
 ---
 
+## 💡 What is FDIC Deposit Insurance & Why It Matters
+
+### The Federal Safety Net
+Backed by the full faith and credit of the U.S. government, FDIC insurance automatically protects eligible deposits (checking, savings, CDs) up to legal limits if an insured bank fails—giving families, retirees, and businesses peace of mind without requiring extra effort or registration.
+
+### The Challenge for Everyday Savers
+* **Not Just a Flat $250,000 Cap**: Coverage is determined per owner, per insured institution, and across distinct legal ownership categories (single, joint, trust, business, retirement), each governed by specific aggregation rules.
+* **Confusion from Rule Updates**: The April 2024 FDIC trust rule simplification capped coverage at 5 beneficiaries ($1.25M maximum per grantor), leaving many third-party guides and tools outdated.
+* **Accidental Coverage Gaps**: Hidden aggregation rules (such as sole proprietorship accounts merging with an individual's personal checking) can leave savers unintentionally uninsured.
+
+### The FDIC EDIE Tool — Strengths & Friction
+* **What It Does Well**: The official Electronic Deposit Insurance Estimator (EDIE) faithfully implements 12 CFR Part 330, supports hypothetical "what-if" planning, and protects privacy without requiring SSNs or logins.
+* **The Friction**: Built on a legacy web form interface, users must navigate dozens of screens and enter account details manually. Assessing multi-account or multi-bank portfolios is tedious and time-consuming.
+
+### The Solution: Deposit Insurance MCP Server
+* **Native SI Assistant Integration**: Connects directly to modern LLMs and assistants (Claude, ChatGPT, Gemini, Microsoft Copilot) via the open Model Context Protocol.
+* **Plain English Conversations**: Instead of complex forms, users describe their finances naturally (e.g., *"I have $300k in joint savings and $100k in checking at the same bank. Am I covered?"*).
+* **Guaranteed Mathematical & Regulatory Accuracy**: Eliminates LLM math and legal hallucinations by grounding responses in a validated 12 CFR Part 330 calculation engine.
+* **Holistic Portfolio Analysis**: Instantly evaluates multiple accounts across various banks in a single prompt with actionable restructuring guidance.
+
+---
+
 ## 🏛️ Regulatory Authority & Compliance
 
 The calculation engine implements deposit insurance rules sourced directly from:
@@ -31,7 +53,7 @@ The calculation engine implements deposit insurance rules sourced directly from:
 - **FastMCP Streamable HTTP Transport**: Exposes MCP tools over Streamable HTTP mounted at `/mcp`, interoperable with both stateful MCP clients and stateless JSON-RPC callers.
 - **Databricks Apps Compatibility**: Dynamic port resolution via the `DATABRICKS_APP_PORT` environment variable (default: `8000`), container-ready host binding `0.0.0.0`, and companion `app.yaml`.
 - **Dual API Interfaces**:
-  - **MCP Tools**: `calculate_deposit_insurance` and `get_insurance_rule_guidance` for AI agents.
+  - **MCP Tools**: `calculate_deposit_insurance` and `get_insurance_rule_guidance` for SI agents.
   - **REST Endpoints**: `/api/calculate`, `/api/guidance`, `/health`, and Swagger `/docs` for traditional web dashboards and monitoring probes.
 - **Actionable Optimization Guidance**: Computes exact insured and uninsured amounts, and generates actionable restructuring advice (e.g., establishing POD trusts, ICS reciprocal networks, or collateralized public deposit protection).
 
@@ -41,7 +63,7 @@ The calculation engine implements deposit insurance rules sourced directly from:
 
 ```mermaid
 flowchart TD
-    Client[AI Agent / LLM Client / Databricks Agent] -->|Streamable HTTP /mcp| FastAPI[FastAPI Application]
+    Client[SI Agent / LLM Client / Databricks Agent] -->|Streamable HTTP /mcp| FastAPI[FastAPI Application]
     Monitoring[Uptime / Health Probe] -->|HTTP GET /health| FastAPI
     RESTClient[Web App / REST Caller] -->|HTTP POST /api/calculate| FastAPI
     
