@@ -40,9 +40,9 @@ The evaluation tests whether an agent equipped with this server can:
 
 ### Framework & Reproducibility
 The evaluation harness combines four complementary tiers:
-1. **Parallel Differential Testing (`tests/test_parallel_edie.py` and `parallel_test_runner.py`):** Runs 21 distinct account configurations through both the upstream FDIC EDIE reference JavaScript algorithm (`edie_calc_reference.js`, extracted directly from `edie.fdic.gov`) and the Python MCP calculation engine (`fdic_engine.py` / `server.py`). A Node.js bridge pipes inputs to the JavaScript reference, and pytest asserts exact parity to the cent on balances, insured amounts, uninsured amounts, and coverage percentages.
+1. **Parallel Differential Testing (`tests/test_parallel_calculator.py` and `parallel_test_runner.py`):** Runs 21 distinct account configurations through both the reference JavaScript algorithm (`deposit_insurance_calc_reference.js`, sourced from FDIC EDIE at `edie.fdic.gov`) and the Python MCP calculation engine (`deposit_insurance_engine.py` / `server.py`). A Node.js bridge pipes inputs to the JavaScript reference, and pytest asserts exact parity to the cent on balances, insured amounts, uninsured amounts, and coverage percentages.
 2. **Comprehensive Integration Suite (`tests/test_server.py`):** Exercises 38 standalone pytest cases validating each category rule in isolation, multi-bank aggregation, custom joint shares, empty/zero boundaries, FastAPI REST endpoints (`/health`, `/`, `/api/calculate`, `/api/guidance`), input error traps (422 / Pydantic validation), and MCP Streamable HTTP JSON-RPC handshakes (`tools/list` and `tools/call`).
-3. **Agentic LLM-as-a-Judge Framework (`eval_llm_judge.py` & `tests/test_llm_judge.py`):** Exercises 5 automated tests evaluating an AI Agent's end-to-end interactions with depositors across 4 golden conversational scenarios. Uses a multi-dimensional rubric scoring Extraction Accuracy (1-5), Factual Groundedness (1-5), Regulatory Fidelity (1-5), Prescriptive Actionability (1-5), and Mandatory FDIC Estimator Disclaimers (Pass/Fail). Dual-mode architecture supports OpenAI models and deterministic benchmark ground-truth evaluators.
+3. **Agentic LLM-as-a-Judge Framework (`eval_llm_judge.py` & `tests/test_llm_judge.py`):** Exercises 5 automated tests evaluating an AI Agent's end-to-end interactions with depositors across 4 golden conversational scenarios. Uses a multi-dimensional rubric scoring Extraction Accuracy (1-5), Factual Groundedness (1-5), Regulatory Fidelity (1-5), Prescriptive Actionability (1-5), and Mandatory FDIC Estimator Disclaimers (Pass/Fail). Dual-mode architecture supports OpenAI models and deterministic benchmark ground-truth evaluators: when `OPENAI_API_KEY` is set (and has credits) it uses OpenAI `gpt-4o-mini`; otherwise it falls back automatically to `RuleBasedBenchmarkJudge`. No API key is required to run the suite.
 4. **Local Zero-Network Runner (`local_test.py`):** A 5-phase end-to-end integration script executing health monitoring probes, root discovery, REST calculation, Streamable HTTP session establishment, and JSON-RPC tool calls.
 
 To reproduce the full evaluation suite:
@@ -77,7 +77,7 @@ The test battery evaluates realistic deposit portfolios spanning all FDIC recogn
 ### Evaluators & Scoring Dimensions
 | Evaluator / Check | Dimension Tested | Target Standard | Result |
 |---|---|---|---|
-| `assert_parallel_parity` | **Mathematical Parity** | Absolute delta $< \$0.01$ vs. FDIC EDIE JS across 21 scenarios | **100% Pass** (0.00% variance) |
+| `assert_parallel_parity` | **Mathematical Parity** | Absolute delta $< \$0.01$ vs. reference calculator JS (from FDIC EDIE) across 21 scenarios | **100% Pass** (0.00% variance) |
 | `test_trust_beneficiary_cap_5` | **Regulatory Freshness (2024 Rule)** | 5-beneficiary cap ($1.25M max) | **100% Pass** |
 | `test_government_in_state_dual_pools` | **Public Fund Oversight** | Bifurcated \$250k demand + \$250k savings | **100% Pass** |
 | `test_sole_proprietorship_dba` | **Entity Classification** | DBA rolled into Single category | **100% Pass** |
@@ -98,18 +98,19 @@ The test battery evaluates realistic deposit portfolios spanning all FDIC recogn
 * **Failed:** 0 (0%)
 * **Mean Tool Execution Latency:** < 5 milliseconds per portfolio calculation
 * **Mathematical Parity Deviation:** **$0.00** across all 21 parallel test scenarios
-* **LLM-as-a-Judge Composite Score:** **94.0%** average across conversational benchmarks (100% passing rate)
+* **LLM-as-a-Judge Composite Score:** **94.0%** average across conversational benchmarks (100% passing rate; scored by the deterministic `RuleBasedBenchmarkJudge`)
+* **Latest Run:** November 23, 2026 on Databricks serverless (Python 3.12.3, pytest 8.4.2, Node.js v22); 64 / 64 tests passed in 2.36 s. Full logs: [`test_outputs/TEST_RESULTS_SUMMARY.md`](test_outputs/TEST_RESULTS_SUMMARY.md)
 
 ### Visual Differential Parity Excerpt (`parallel_test_runner.py`)
 ```
 ===========================================================================
- PARALLEL TEST SUITE: FDIC EDIE CALCULATOR VS. MCP TOOL SERVER
+ PARALLEL TEST SUITE: REFERENCE CALCULATOR VS. MCP TOOL SERVER
 ===========================================================================
 
 ---------------------------------------------------------------------------
  SCENARIO: 3. Revocable Trust with Beneficiary Cap (2024 Rule: 7 Beneficiaries Capped at 5)
 ---------------------------------------------------------------------------
-Metric                    | EDIE Calculator (JS)   | MCP Server Tool (Py)   | Match?
+Metric                    | Reference Calc (JS)    | MCP Server Tool (Py)   | Match?
 ---------------------------------------------------------------------------
 Total Balance             | $1,600,000.00          | $1,600,000.00          | [MATCH]
 Total Insured             | $1,250,000.00          | $1,250,000.00          | [MATCH]
@@ -120,9 +121,9 @@ Coverage Percent          | 78.13%                 | 78.13%                 | [M
       [TRST-01] Balance: $1,600,000.00 -> Insured: $1,250,000.00 | Uninsured: $350,000.00 [MATCH]
 
 ---------------------------------------------------------------------------
- SCENARIO: 6. Complex Multi-Category Enterprise Portfolio (6 Accounts)
+ SCENARIO: 6. Complex Multi-Category Enterprise Portfolio
 ---------------------------------------------------------------------------
-Metric                    | EDIE Calculator (JS)   | MCP Server Tool (Py)   | Match?
+Metric                    | Reference Calc (JS)    | MCP Server Tool (Py)   | Match?
 ---------------------------------------------------------------------------
 Total Balance             | $3,150,000.00          | $3,150,000.00          | [MATCH]
 Total Insured             | $2,870,000.00          | $2,870,000.00          | [MATCH]
@@ -131,7 +132,7 @@ Coverage Percent          | 91.11%                 | 91.11%                 | [M
 
 ===========================================================================
  PARALLEL AUDIT RESULT: 6/6 SCENARIOS FULLY VERIFIED
- VERDICT: 100% MATHEMATICAL PARITY CONFIRMED WITH FDIC EDIE CALCULATOR!
+ VERDICT: 100% MATHEMATICAL PARITY CONFIRMED WITH REFERENCE CALCULATOR!
 ===========================================================================
 ```
 

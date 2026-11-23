@@ -223,8 +223,9 @@ tests/test_server.py::test_mcp_calculate_tool_invocation PASSED          [ 97%]
 
 ### Project Repository & Artifacts Summary
 * **Server Implementation:** `server.py`
-* **Calculation Engine & 12 CFR Part 330 Rules:** `fdic_engine.py`
+* **Calculation Engine & 12 CFR Part 330 Rules:** `deposit_insurance_engine.py`
 * **Databricks Container Configuration:** `app.yaml`
-* **64-Test Automated Suite (including LLM-as-a-Judge):** `tests/test_server.py` & `tests/test_parallel_calculator.py`
+* **64-Test Automated Suite (including LLM-as-a-Judge):** `tests/test_server.py`, `tests/test_parallel_calculator.py` & `tests/test_llm_judge.py`
+* **Latest Test Results (Nov 23, 2026 – 64 / 64 passed):** `test_outputs/TEST_RESULTS_SUMMARY.md`
 * **Visual Parallel Parity Runner:** `parallel_test_runner.py`
 * **Local 5-Phase Verifier:** `local_test.py`

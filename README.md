@@ -117,14 +117,26 @@ Returns official regulatory guidance, formulas, statutory citations, and common 
 
 ```
 .
-├── app.yaml               # Databricks Apps application deployment manifest
-├── requirements.txt       # Production dependencies
-├── server.py              # Main FastMCP server and FastAPI application entrypoint
-├── deposit_insurance_engine.py # Calculation engine, Pydantic schemas & regulatory rule repository
-├── local_test.py          # Standalone verification script (runs 5 test phases locally)
+├── app.yaml                            # Databricks Apps application deployment manifest
+├── requirements.txt                    # Production dependencies
+├── pytest.ini                          # Pytest configuration (testpaths = tests)
+├── server.py                           # Main FastMCP server and FastAPI application entrypoint
+├── deposit_insurance_engine.py         # Calculation engine, Pydantic schemas & regulatory rule repository
+├── deposit_insurance_calc_reference.js # JavaScript reference engine (sourced from FDIC EDIE) for parity tests
+├── upstream_calc_reference.js          # Upstream EDIE JavaScript source, kept for reference
+├── local_test.py                       # Standalone verification script (runs 5 test phases locally)
+├── parallel_test_runner.py             # Side-by-side JS vs. Python parity runner (6 scenarios)
+├── eval_llm_judge.py                   # LLM-as-a-Judge evaluation harness (4 golden scenarios)
+├── john_maria_scenario.py              # Bereavement grace-period case study (4 cases)
 ├── tests/
-│   └── test_server.py     # Comprehensive pytest test suite (23 test cases)
-└── README.md              # Project documentation and compliance guide
+│   ├── test_server.py                  # Integration & validation suite (38 tests)
+│   ├── test_parallel_calculator.py     # Differential parity suite vs. JS reference (21 tests)
+│   └── test_llm_judge.py               # LLM-as-a-Judge suite (5 tests)
+├── test_outputs/                       # Latest raw test logs + TEST_RESULTS_SUMMARY.md
+├── EVALUATION_DOCUMENT.md              # Evaluation methodology and results
+├── DELIVERABLE_DECK.md                 # Hackathon deliverable deck
+├── .github/workflows/ci.yml            # CI: pytest + local verification
+└── README.md                           # Project documentation and compliance guide
 ```
 
 ---
@@ -132,7 +144,7 @@ Returns official regulatory guidance, formulas, statutory citations, and common 
 ## 🧪 Local Testing & Parallel Verification with FDIC Deposit Insurance Calculator
 
 ### 1. Parallel Differential Testing (Deposit Insurance Calculator JS vs. Python MCP Server)
-The repository includes a parallel differential testing harness that downloads and runs the actual calculation algorithms from [`https://edie.fdic.gov/javascript/edie.js`](https://edie.fdic.gov/javascript/edie.js) via Node.js in parallel with the Python MCP Server, ensuring **100% mathematical parity**:
+The repository includes a parallel differential testing harness that runs the bundled JavaScript reference engine (`deposit_insurance_calc_reference.js`, sourced from [`https://edie.fdic.gov/javascript/edie.js`](https://edie.fdic.gov/javascript/edie.js)) via Node.js in parallel with the Python MCP Server, ensuring **100% mathematical parity**. Node.js must be installed:
 
 ```bash
 # Run visual side-by-side comparison
@@ -142,8 +154,8 @@ python parallel_test_runner.py
 python -m pytest -v tests/test_parallel_calculator.py # 21 tests
 ```
 
-### 2. Full Regression Test Suite (37 Tests)
-Run all 37 unit, integration, and parallel differential tests:
+### 2. Full Regression Test Suite (64 Tests)
+Run all 64 tests (38 integration, 21 parallel differential, 5 LLM-as-a-Judge):
 ```bash
 python -m pytest -v tests/
 ```
@@ -157,16 +169,16 @@ python local_test.py
 Output:
 ```
 ======================================================================
- FDIC DEPOSIT INSURANCE MCP SERVER - LOCAL VERIFICATION
+ DEPOSIT INSURANCE CALCULATOR MCP SERVER - LOCAL VERIFICATION
 ======================================================================
 [Step 1/5] Testing Health Check Endpoint (/health)...
   --> Status: HEALTHY
-  --> Service: fdic-deposit-insurance-mcp
+  --> Service: deposit-insurance-calculator-mcp
   --> Port: 8000
   --> Tools Loaded: calculate_deposit_insurance, get_insurance_rule_guidance
 
 [Step 2/5] Testing Root Discovery Endpoint (/)...
-  --> Service: FDIC Deposit Insurance MCP Server
+  --> Service: Deposit Insurance Calculator MCP Server
   --> Regulatory Compliance: 12 CFR Part 330, FDIC Financial Institution Employee's Guide...
   --> MCP Path: /mcp
 
@@ -175,6 +187,7 @@ Output:
   --> Total Insured:           $2,750,000.00
   --> Total Uninsured:         $400,000.00
   --> Insurance Coverage:      87.3%
+  --> Fully Insured:           False
 
 [Step 4/5] Testing MCP Streamable HTTP Transport (/mcp/ -> tools/list)...
   --> MCP Streamable HTTP Protocol Handshake: SUCCESS (HTTP 200)
@@ -182,7 +195,7 @@ Output:
 
 [Step 5/5] Invoking calculate_deposit_insurance via MCP JSON-RPC Protocol...
   --> MCP Tool Call: SUCCESS
-  --> 2024 FDIC Trust Rule Verification:
+  --> 2024 Trust Rule Verification:
       Grantor Alice has 7 beneficiaries, capped at 5 ($1,250,000 maximum).
       Result correctly reports $1,250,000 Insured, $250,000 Uninsured.
 
@@ -191,7 +204,17 @@ Output:
 ======================================================================
 ```
 
-### Step 4: Run the Live Server
+### 4. Run the LLM-as-a-Judge and Case Study Scripts
+```bash
+python eval_llm_judge.py       # 4 golden conversational scenarios (5-dimension rubric)
+python john_maria_scenario.py  # Bereavement 6-month grace period case study
+```
+`OPENAI_API_KEY` is optional. If it is set (and the account has credits), `eval_llm_judge.py` uses OpenAI `gpt-4o-mini` as the judge; otherwise it falls back automatically to the deterministic `RuleBasedBenchmarkJudge`.
+
+### 5. Latest Test Results
+The most recent full run (November 23, 2026, Databricks serverless, Python 3.12.3, pytest 8.4.2, Node.js v22) passed 64 / 64 pytest cases, 6 / 6 parity scenarios, all 5 local verification phases, 4 / 4 LLM judge scenarios (94.0% mean, deterministic judge), and 4 / 4 John & Maria cases. See [`test_outputs/TEST_RESULTS_SUMMARY.md`](test_outputs/TEST_RESULTS_SUMMARY.md) and the raw logs in [`test_outputs/`](test_outputs/).
+
+### 6. Run the Live Server
 Start the server locally:
 ```bash
 python server.py
@@ -212,12 +235,10 @@ command:
 env:
   - name: "PYTHONUNBUFFERED"
     value: "1"
-  - name: "DATABRICKS_APP_PORT"
-    value: "8000"
 ```
 
 1. Deploy the folder directly to your Databricks Workspace under **Compute > Apps**.
-2. Databricks Apps automatically assigns a port via `DATABRICKS_APP_PORT` and routes external traffic to the container.
+2. Databricks Apps automatically injects `DATABRICKS_APP_PORT` and routes external traffic to the container. Do not set this variable in `app.yaml`; `server.py` reads it at startup and falls back to `8000` when running locally.
 3. Access the MCP endpoint at `https://<databricks-app-url>/mcp`.
 
 ---
