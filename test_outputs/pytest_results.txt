@@ -1,10 +1,8 @@
-﻿============================= test session starts =============================
-platform win32 -- Python 3.13.5, pytest-9.2.0, pluggy-1.7.0 -- C:\Users\prasa\AppData\Local\Programs\Python\Python313\python.exe
-cachedir: .pytest_cache
-rootdir: C:\Users\prasa\Documents\Sharmila\GSA Hackathon
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-8.4.2, pluggy-1.5.0 -- /local_disk0/.ephemeral_nfs/envs/pythonEnv-852887d4-c65d-405c-b4b4-cb688d51a0b9/bin/python
+rootdir: /tmp/dim
 configfile: pytest.ini
-testpaths: tests
-plugins: anyio-4.11.0, langsmith-0.4.37, asyncio-1.5.0
+plugins: asyncio-1.5.0, anyio-4.10.0
 asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
 collecting ... collected 64 items
 
@@ -13,27 +11,27 @@ tests/test_llm_judge.py::test_llm_judge_scenario_evaluation[2. 2024 Trust Rule 5
 tests/test_llm_judge.py::test_llm_judge_scenario_evaluation[3. Municipal Treasurer Public Unit Dual-Pool] PASSED [  4%]
 tests/test_llm_judge.py::test_llm_judge_scenario_evaluation[4. Bereavement 6-Month Statutory Grace Period] PASSED [  6%]
 tests/test_llm_judge.py::test_llm_judge_catches_hallucinated_numbers PASSED [  7%]
-tests/test_parallel_edie.py::test_parallel_single_accounts PASSED        [  9%]
-tests/test_parallel_edie.py::test_parallel_multiple_single_same_owner PASSED [ 10%]
-tests/test_parallel_edie.py::test_parallel_sole_proprietorship_dba PASSED [ 12%]
-tests/test_parallel_edie.py::test_parallel_joint_equal_split PASSED      [ 14%]
-tests/test_parallel_edie.py::test_parallel_joint_over_limit PASSED       [ 15%]
-tests/test_parallel_edie.py::test_parallel_joint_cross_ownership PASSED  [ 17%]
-tests/test_parallel_edie.py::test_parallel_trust_under_limit PASSED      [ 18%]
-tests/test_parallel_edie.py::test_parallel_trust_beneficiary_cap_5 PASSED [ 20%]
-tests/test_parallel_edie.py::test_parallel_trust_two_grantors PASSED     [ 21%]
-tests/test_parallel_edie.py::test_parallel_business_accounts PASSED      [ 23%]
-tests/test_parallel_edie.py::test_parallel_government_in_state PASSED    [ 25%]
-tests/test_parallel_edie.py::test_parallel_government_out_of_state PASSED [ 26%]
-tests/test_parallel_edie.py::test_parallel_retirement_accounts PASSED    [ 28%]
-tests/test_parallel_edie.py::test_parallel_complex_multi_category_portfolio PASSED [ 29%]
-tests/test_parallel_edie.py::test_parallel_empty_portfolio PASSED        [ 31%]
-tests/test_parallel_edie.py::test_parallel_zero_balance_account PASSED   [ 32%]
-tests/test_parallel_edie.py::test_parallel_multi_bank_separation PASSED  [ 34%]
-tests/test_parallel_edie.py::test_parallel_joint_custom_percentages PASSED [ 35%]
-tests/test_parallel_edie.py::test_parallel_joint_custom_dollar_amounts PASSED [ 37%]
-tests/test_parallel_edie.py::test_parallel_retirement_over_limit PASSED  [ 39%]
-tests/test_parallel_edie.py::test_parallel_multi_trust_overlapping_beneficiaries PASSED [ 40%]
+tests/test_parallel_calculator.py::test_parallel_single_accounts PASSED  [  9%]
+tests/test_parallel_calculator.py::test_parallel_multiple_single_same_owner PASSED [ 10%]
+tests/test_parallel_calculator.py::test_parallel_sole_proprietorship_dba PASSED [ 12%]
+tests/test_parallel_calculator.py::test_parallel_joint_equal_split PASSED [ 14%]
+tests/test_parallel_calculator.py::test_parallel_joint_over_limit PASSED [ 15%]
+tests/test_parallel_calculator.py::test_parallel_joint_cross_ownership PASSED [ 17%]
+tests/test_parallel_calculator.py::test_parallel_trust_under_limit PASSED [ 18%]
+tests/test_parallel_calculator.py::test_parallel_trust_beneficiary_cap_5 PASSED [ 20%]
+tests/test_parallel_calculator.py::test_parallel_trust_two_grantors PASSED [ 21%]
+tests/test_parallel_calculator.py::test_parallel_business_accounts PASSED [ 23%]
+tests/test_parallel_calculator.py::test_parallel_government_in_state PASSED [ 25%]
+tests/test_parallel_calculator.py::test_parallel_government_out_of_state PASSED [ 26%]
+tests/test_parallel_calculator.py::test_parallel_retirement_accounts PASSED [ 28%]
+tests/test_parallel_calculator.py::test_parallel_complex_multi_category_portfolio PASSED [ 29%]
+tests/test_parallel_calculator.py::test_parallel_empty_portfolio PASSED  [ 31%]
+tests/test_parallel_calculator.py::test_parallel_zero_balance_account PASSED [ 32%]
+tests/test_parallel_calculator.py::test_parallel_multi_bank_separation PASSED [ 34%]
+tests/test_parallel_calculator.py::test_parallel_joint_custom_percentages PASSED [ 35%]
+tests/test_parallel_calculator.py::test_parallel_joint_custom_dollar_amounts PASSED [ 37%]
+tests/test_parallel_calculator.py::test_parallel_retirement_over_limit PASSED [ 39%]
+tests/test_parallel_calculator.py::test_parallel_multi_trust_overlapping_beneficiaries PASSED [ 40%]
 tests/test_server.py::test_single_account_under_limit PASSED             [ 42%]
 tests/test_server.py::test_single_account_over_limit PASSED              [ 43%]
 tests/test_server.py::test_multiple_single_accounts_aggregation PASSED   [ 45%]
@@ -73,4 +71,4 @@ tests/test_server.py::test_fastapi_guidance_uninsured_crypto_topic PASSED [ 96%]
 tests/test_server.py::test_mcp_calculate_tool_dict_input PASSED          [ 98%]
 tests/test_server.py::test_mcp_calculate_tool_validation_error_handling PASSED [100%]
 
-============================= 64 passed in 11.57s =============================
+============================== 64 passed in 2.36s ==============================

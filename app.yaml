@@ -9,5 +9,3 @@ command:
 env:
   - name: "PYTHONUNBUFFERED"
     value: "1"
-  - name: "DATABRICKS_APP_PORT"
-    value: "8000"

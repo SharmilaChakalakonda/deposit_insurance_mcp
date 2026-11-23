@@ -1,12 +1,10 @@
-﻿================================================================================
+================================================================================
  FDIC DEPOSIT INSURANCE MCP SERVER: LLM-AS-A-JUDGE EVALUATION HARNESS
 ================================================================================
 
 [Evaluating Scenario] 1. Bob & Alice Family + Sole Proprietorship DBA
-2026-11-23 16:17:40,427 [INFO] fdic-mcp-server: Executing calculate_deposit_insurance with 3 account(s)
-2026-11-23 16:17:40,427 [INFO] fdic-mcp-server: Retrieving FDIC guidance for category='joint', topic='None'
-2026-11-23 16:17:42,965 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
-2026-11-23 16:17:42,966 [WARNING] eval-llm-judge: LLM API call failed (Error code: 429 - {'error': {'message': 'You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.', 'type': 'insufficient_quota', 'param': None, 'code': 'credit_balance_exhausted'}}); switching to RuleBasedBenchmarkJudge.
+2026-11-23 23:22:56,378 [INFO] deposit-insurance-calculator-mcp: Executing calculate_deposit_insurance with 3 account(s)
+2026-11-23 23:22:56,378 [INFO] deposit-insurance-calculator-mcp: Retrieving FDIC guidance for category='joint', topic='None'
   --> Judge Model:           RuleBasedBenchmarkJudge (Deterministic Ground-Truth)
   --> Extraction Accuracy:   5/5
   --> Factual Groundedness:  5/5
@@ -17,10 +15,8 @@
   --> Rationale: Benchmark evaluation verified: 3 account(s) correctly extracted; total balances ($930,000.00) and insured amounts ($830,000.00) grounded without hallucination; statutory concepts verified against 12 CFR Part 330; FDIC estimator compliance disclaimer verified: True.
 
 [Evaluating Scenario] 2. 2024 Trust Rule 5-Beneficiary Cap Stress Test
-2026-11-23 16:17:42,967 [INFO] fdic-mcp-server: Executing calculate_deposit_insurance with 1 account(s)
-2026-11-23 16:17:42,967 [INFO] fdic-mcp-server: Retrieving FDIC guidance for category='trust', topic='None'
-2026-11-23 16:17:43,529 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
-2026-11-23 16:17:43,530 [WARNING] eval-llm-judge: LLM API call failed (Error code: 429 - {'error': {'message': 'You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.', 'type': 'insufficient_quota', 'param': None, 'code': 'credit_balance_exhausted'}}); switching to RuleBasedBenchmarkJudge.
+2026-11-23 23:22:56,379 [INFO] deposit-insurance-calculator-mcp: Executing calculate_deposit_insurance with 1 account(s)
+2026-11-23 23:22:56,379 [INFO] deposit-insurance-calculator-mcp: Retrieving FDIC guidance for category='trust', topic='None'
   --> Judge Model:           RuleBasedBenchmarkJudge (Deterministic Ground-Truth)
   --> Extraction Accuracy:   5/5
   --> Factual Groundedness:  5/5
@@ -31,10 +27,8 @@
   --> Rationale: Benchmark evaluation verified: 1 account(s) correctly extracted; total balances ($2,000,000.00) and insured amounts ($1,250,000.00) grounded without hallucination; statutory concepts verified against 12 CFR Part 330; FDIC estimator compliance disclaimer verified: True.
 
 [Evaluating Scenario] 3. Municipal Treasurer Public Unit Dual-Pool
-2026-11-23 16:17:43,530 [INFO] fdic-mcp-server: Executing calculate_deposit_insurance with 2 account(s)
-2026-11-23 16:17:43,530 [INFO] fdic-mcp-server: Retrieving FDIC guidance for category='government', topic='None'
-2026-11-23 16:17:44,303 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
-2026-11-23 16:17:44,304 [WARNING] eval-llm-judge: LLM API call failed (Error code: 429 - {'error': {'message': 'You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.', 'type': 'insufficient_quota', 'param': None, 'code': 'credit_balance_exhausted'}}); switching to RuleBasedBenchmarkJudge.
+2026-11-23 23:22:56,379 [INFO] deposit-insurance-calculator-mcp: Executing calculate_deposit_insurance with 2 account(s)
+2026-11-23 23:22:56,380 [INFO] deposit-insurance-calculator-mcp: Retrieving FDIC guidance for category='government', topic='None'
   --> Judge Model:           RuleBasedBenchmarkJudge (Deterministic Ground-Truth)
   --> Extraction Accuracy:   5/5
   --> Factual Groundedness:  5/5
@@ -45,10 +39,8 @@
   --> Rationale: Benchmark evaluation verified: 2 account(s) correctly extracted; total balances ($600,000.00) and insured amounts ($450,000.00) grounded without hallucination; statutory concepts verified against 12 CFR Part 330; FDIC estimator compliance disclaimer verified: True.
 
 [Evaluating Scenario] 4. Bereavement 6-Month Statutory Grace Period
-2026-11-23 16:17:44,304 [INFO] fdic-mcp-server: Executing calculate_deposit_insurance with 1 account(s)
-2026-11-23 16:17:44,304 [INFO] fdic-mcp-server: Retrieving FDIC guidance for category='single', topic='None'
-2026-11-23 16:17:44,932 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
-2026-11-23 16:17:44,933 [WARNING] eval-llm-judge: LLM API call failed (Error code: 429 - {'error': {'message': 'You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.', 'type': 'insufficient_quota', 'param': None, 'code': 'credit_balance_exhausted'}}); switching to RuleBasedBenchmarkJudge.
+2026-11-23 23:22:56,380 [INFO] deposit-insurance-calculator-mcp: Executing calculate_deposit_insurance with 1 account(s)
+2026-11-23 23:22:56,380 [INFO] deposit-insurance-calculator-mcp: Retrieving FDIC guidance for category='single', topic='None'
   --> Judge Model:           RuleBasedBenchmarkJudge (Deterministic Ground-Truth)
   --> Extraction Accuracy:   5/5
   --> Factual Groundedness:  5/5
